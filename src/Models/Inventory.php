@@ -71,7 +71,11 @@ class Inventory extends BaseModel
      */
     public function suppliers()
     {
-        return $this->belongsToMany('Stevebauman\Inventory\Models\Supplier', 'inventory_suppliers', 'inventory_id')->withTimestamps();
+        return $this->belongsToMany('Stevebauman\Inventory\Models\Supplier', 'inventory_suppliers', 'inventory_id')
+            ->withPivot([
+                'created_by'
+            ])
+            ->withTimestamps();
     }
 
     /**

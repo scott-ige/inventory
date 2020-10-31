@@ -936,7 +936,9 @@ trait InventoryTrait
         $this->dbStartTransaction();
 
         try {
-            $this->suppliers()->attach($supplier);
+            $this->suppliers()->attach($supplier, [
+                'created_by' => static::getCurrentUserId(),
+            ]);
 
             $this->dbCommitTransaction();
 
