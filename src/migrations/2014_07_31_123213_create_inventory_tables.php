@@ -39,7 +39,7 @@ class CreateInventoryTables extends Migration
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('created_by')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->foreignId('inventory_id')->nullable();
             $table->foreignId('location_id');
             $table->decimal('quantity', 8, 2)->default(0);

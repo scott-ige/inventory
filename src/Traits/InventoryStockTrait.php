@@ -96,7 +96,7 @@ trait InventoryStockTrait
     public static function bootInventoryStockTrait()
     {
         static::creating(function (Model $model) {
-            $model->created_by = static::getCurrentUserId();
+            $model->{static::getForeignUserKey()} = static::getCurrentUserId();
 
             /*
              * Check if a reason has been set, if not

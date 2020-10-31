@@ -169,7 +169,7 @@ trait AssemblyTrait
     public function addAssemblyItem(Model $part, $quantity = 1, array $extra = [])
     {
         if ($this->isValidQuantity($quantity)) {
-            if (!$this->is_assembly) {
+            if (! $this->is_assembly) {
                 $this->makeAssembly();
             }
 

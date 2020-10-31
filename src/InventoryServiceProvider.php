@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Class InventoryServiceProvider.
+ *
+ * @package Stevebauman\Inventory
+ * @version 1.8.0
  */
 class InventoryServiceProvider extends ServiceProvider
 {
@@ -14,7 +17,7 @@ class InventoryServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '1.7.5';
+    const VERSION = '1.8.0';
 
     /**
      * Stores the package configuration separator
@@ -30,7 +33,7 @@ class InventoryServiceProvider extends ServiceProvider
      *
      * @var int
      */
-    public static $laravelVersion = 4;
+    public static $laravelVersion = 8;
 
     /**
      * Indicates if loading of the provider is deferred.

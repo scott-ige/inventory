@@ -25,13 +25,6 @@ trait UserIdentificationTrait
     protected static function getCurrentUserId()
     {
         /*
-         * Check if we're allowed to return no user ID to the model, if so we'll return NULL
-         */
-        if (Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'allow_no_user')) {
-            return;
-        }
-
-        /*
          * Accountability is enabled, let's try and retrieve the current users ID
          */
         try {
@@ -47,8 +40,13 @@ trait UserIdentificationTrait
         } catch (\Exception $e) {
         }
 
+        // Check if no user is allowed
+        if (Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'allow_no_user')) {
+            return;
+        }
+
         /*
-         * Couldn't get the current logged in users ID, throw exception
+         * Couldn't get the current logged in users ID and and no user is not allowed, throw exception
          */
         $message = Lang::get('inventory::exceptions.NoUserLoggedInException');
 
@@ -56,12 +54,12 @@ trait UserIdentificationTrait
     }
 
     /**
-     * Get the user foreign key.
+     * Get the foreign user key.
      *
      * @return mixed
      */
-    protected static function getUserForeignKey()
+    protected static function getForeignUserKey()
     {
-        return Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'user_foreign_key', 'created_by');
+        return Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'foreign_user_key', 'user_id');
     }
 }

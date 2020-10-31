@@ -69,6 +69,6 @@ return [
      *
      * @var string
      */
-    'user_foreign_key' => 'created_by',
+    'foreign_user_key' => 'user_id',
 
 ];

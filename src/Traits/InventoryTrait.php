@@ -90,7 +90,7 @@ trait InventoryTrait
          * is being created
          */
         static::creating(function (Model $record) {
-            $record->created_by = static::getCurrentUserId();
+            $record->{static::getForeignUserKey()} = static::getCurrentUserId();
         });
 
         /*
