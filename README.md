@@ -7,9 +7,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/stevebauman/inventory.svg?style=flat-square)](https://packagist.org/packages/stevebauman/inventory)
 [![License](https://img.shields.io/packagist/l/stevebauman/inventory.svg?style=flat-square)](https://packagist.org/packages/stevebauman/inventory)
 
-## 🚨 Abandoned 🚨
-
-This package has been taken over by @mauricecalhoun.
+This package has been taken over by @pauljbergmann.
 
 ## Index
 
@@ -91,15 +89,14 @@ you can simply use the built in models.
 
 ### Requirements
 
-- Laravel 4.* | 5.*
-- Laravel's Auth, Sentry or Sentinel if you need automatic accountability
+- Laravel 8
+- Laravel's Auth, Sentry or Sentinel if you need automatic accountability (might remove Sentry or Sentinel in upcoming update(s))
 - A `users` database table
 
 Recommended:
 
 - [Stevebauman/Revision](http://www.github.com/stevebauman/revision) (For tracking Category and Location changes to stocks)
 
-If you need another Auth driver supported, please send a pull request or create an issue.
 
 ### Benefits
 
@@ -108,3 +105,7 @@ models, methods (excluding relationship names/type), database tables, property n
 own base model, and if you don't like the way a method is performed just override it.
 
 Sit back and relax, it's nice to have control.
+
+### Changes for this fork
+
+I've updated the package as far as it works with Laravel 8. Might want to remove auth support for other drivers than Laravel's Auth, simply because I don't need it. 
