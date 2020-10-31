@@ -210,7 +210,7 @@ trait AssemblyTrait
         $count = 0;
 
         if (count($parts) > 0) {
-            foreach ($parts as $part) {
+            foreach ($parts as $part => $key) {
                 if ($this->addAssemblyItem($part, $quantity, $extra)) {
                     $count++;
                 }

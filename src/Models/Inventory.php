@@ -7,7 +7,10 @@ use Stevebauman\Inventory\Traits\InventoryVariantTrait;
 use Stevebauman\Inventory\Traits\InventoryTrait;
 
 /**
- * Class Inventory.
+ * Class Inventory
+ *
+ * @package Stevebauman\Inventory
+ * @version 1.8.0
  */
 class Inventory extends BaseModel
 {
@@ -15,8 +18,18 @@ class Inventory extends BaseModel
     use InventoryVariantTrait;
     use AssemblyTrait;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'inventories';
 
+    /**
+     * Mass assignable attributes.
+     *
+     * @var array
+     */
     protected $fillable = [
         'created_by',
         'category_id',

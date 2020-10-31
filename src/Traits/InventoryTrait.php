@@ -14,6 +14,10 @@ use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
 
 /**
  * Trait InventoryTrait.
+ *
+ * @version 1.8.0
+ * @todo Make created_by attribute dynamic using configuration file.
+ * @todo Add event dispatcher for fireEvent().
  */
 trait InventoryTrait
 {
@@ -162,11 +166,7 @@ trait InventoryTrait
      */
     public function hasMetric()
     {
-        if ($this->metric) {
-            return true;
-        }
-
-        return false;
+        return ($this->metric) ? true : false;
     }
 
     /**
@@ -176,11 +176,7 @@ trait InventoryTrait
      */
     public function hasSku()
     {
-        if ($this->sku) {
-            return true;
-        }
-
-        return false;
+        return ($this->sku) ? true : false;
     }
 
     /**
@@ -190,11 +186,7 @@ trait InventoryTrait
      */
     public function hasCategory()
     {
-        if ($this->category) {
-            return true;
-        }
-
-        return false;
+        return ($this->category) ? true : false;
     }
 
     /**
@@ -204,11 +196,9 @@ trait InventoryTrait
      */
     public function getMetricSymbol()
     {
-        if ($this->hasMetric()) {
-            return $this->metric->symbol;
-        }
-
-        return;
+        return ($this->hasMetric())
+            ? $this->metric->symbol
+            : null;
     }
 
     /**
@@ -218,7 +208,7 @@ trait InventoryTrait
      */
     public function isInStock()
     {
-        return ($this->getTotalStock() > 0 ? true : false);
+        return ($this->getTotalStock() > 0);
     }
 
     /**
@@ -545,11 +535,9 @@ trait InventoryTrait
      */
     public function getSku()
     {
-        if ($this->hasSku()) {
-            return $this->sku->code;
-        }
-
-        return;
+        return ($this->hasSku())
+            ? $this->sku->code()
+            : null;
     }
 
     /**
@@ -576,7 +564,7 @@ trait InventoryTrait
         /*
          * Make sure sku generation is enabled and the item has a category, if not we'll return false.
          */
-        if (!$this->skusEnabled() || !$this->hasCategory()) {
+        if (! $this->skusEnabled() || ! $this->hasCategory()) {
             return false;
         }
 
@@ -741,7 +729,7 @@ trait InventoryTrait
         /*
          * Get the current SKU record if one isn't supplied
          */
-        if (!$sku) {
+        if (! $sku) {
             $sku = $this->sku()->first();
         }
 
@@ -749,7 +737,7 @@ trait InventoryTrait
          * If an SKU still doesn't exist after
          * trying to find one, we'll create one
          */
-        if (!$sku) {
+        if (! $sku) {
             return $this->processSkuGeneration($this->getKey(), $code);
         }
 

@@ -6,7 +6,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
 /**
- * Trait DatabaseTransactionTrait.
+ * Trait DatabaseTransactionTrait
+ *
+ * @package Stevebauman\Inventory
+ * @version 1.8.0
  */
 trait DatabaseTransactionTrait
 {
@@ -20,7 +23,7 @@ trait DatabaseTransactionTrait
      */
     protected function fireEvent($name, $args = [])
     {
-//        return Event::fire((string) $name, (array) $args);
+        return Event::dispatch((string) $name, (array) $args);
     }
 
     /**

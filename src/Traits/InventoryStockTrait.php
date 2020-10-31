@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Lang;
 use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
 
 /**
- * Trait InventoryStockTrait.
+ * Trait InventoryStockTrait
+ *
+ * @package Stevebauman\Inventory
+ * @version 1.8.0
  */
 trait InventoryStockTrait
 {
@@ -99,7 +102,7 @@ trait InventoryStockTrait
              * Check if a reason has been set, if not
              * let's retrieve the default first entry reason
              */
-            if (!$model->reason) {
+            if (! $model->reason) {
                 $model->reason = Lang::get('inventory::reasons.first_record');
             }
         });
