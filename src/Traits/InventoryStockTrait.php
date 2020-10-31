@@ -121,7 +121,7 @@ trait InventoryStockTrait
             /*
              * Check if a reason has been set, if not let's retrieve the default change reason
              */
-            if (!$model->reason) {
+            if (! $model->reason) {
                 $model->reason = Lang::get('inventory::reasons.change');
             }
         });
@@ -139,7 +139,7 @@ trait InventoryStockTrait
         /*
          * Only create a first record movement if one isn't created already
          */
-        if (!$this->getLastMovement()) {
+        if (! $this->getLastMovement()) {
             /*
              * Generate the movement
              */
@@ -438,7 +438,7 @@ trait InventoryStockTrait
          * duplicate movements are allowed. We'll return the current record if
          * they aren't.
          */
-        if ($left == $this->quantity && !$this->allowDuplicateMovementsEnabled()) {
+        if ($left == $this->quantity && ! $this->allowDuplicateMovementsEnabled()) {
             return $this;
         }
 
@@ -486,7 +486,7 @@ trait InventoryStockTrait
          * If the updated total and the beginning total are the same,
          * we'll check if duplicate movements are allowed
          */
-        if ($total == $this->quantity && !$this->allowDuplicateMovementsEnabled()) {
+        if ($total == $this->quantity && ! $this->allowDuplicateMovementsEnabled()) {
             return $this;
         }
 

@@ -16,8 +16,8 @@ use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
  * Trait InventoryTrait.
  *
  * @version 1.8.0
- * @todo Make created_by attribute dynamic using configuration file.
- * @todo Add event dispatcher for fireEvent().
+ * @author Stevebauman
+ * @author Pauljbergmann
  */
 trait InventoryTrait
 {
@@ -925,7 +925,7 @@ trait InventoryTrait
 
         try {
             $this->suppliers()->attach($supplier, [
-                'created_by' => static::getCurrentUserId(),
+                static::getForeignUserKey() => static::getCurrentUserId(),
             ]);
 
             $this->dbCommitTransaction();
