@@ -11,16 +11,16 @@ class CreateInventoryAssembliesTable extends Migration
     public function up()
     {
         Schema::create('inventory_assemblies', function (Blueprint $table) {
-
-            $table->increments('id');
+            $table->id();
             $table->timestamps();
-            $table->integer('inventory_id')->unsigned();
-            $table->integer('part_id')->unsigned();
-            $table->integer('quantity')->nullable();
+            $table->foreignId('inventory_id');
+            $table->foreignId('part_id');
+            $table->foreignId('quantity')->nullable();
 
+            /*
             $table->foreign('inventory_id')->references('id')->on('inventories')->onDelete('cascade');
             $table->foreign('part_id')->references('id')->on('inventories')->onDelete('cascade');
-
+            */
         });
     }
 

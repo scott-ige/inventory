@@ -29,12 +29,13 @@ class CreateInventorySupplierTables extends Migration
         });
 
         Schema::create('inventory_suppliers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->timestamps();
+            $table->unsignedInteger('inventory_id');
+            $table->unsignedInteger('supplier_id');
+            $table->foreignId('created_by')->nullable();
 
-            $table->integer('inventory_id')->unsigned();
-            $table->integer('supplier_id')->unsigned();
-
+            /*
             $table->foreign('inventory_id')->references('id')->on('inventories')
                 ->onUpdate('restrict')
                 ->onDelete('cascade');
@@ -42,6 +43,7 @@ class CreateInventorySupplierTables extends Migration
             $table->foreign('supplier_id')->references('id')->on('suppliers')
                 ->onUpdate('restrict')
                 ->onDelete('cascade');
+            */
         });
     }
 

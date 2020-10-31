@@ -11,16 +11,15 @@ class CreateMetricsTable extends Migration
     public function up()
     {
         Schema::create('metrics', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->timestamps();
-
-            $table->integer('user_id')->unsigned()->nullable();
+            $table->foreignId('created_by')->nullable();
             $table->string('name');
             $table->string('symbol');
 
-            $table->foreign('user_id')->references('id')->on('users')
+            /*$table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('restrict')
-                ->onDelete('set null');
+                ->onDelete('set null');*/
         });
     }
 

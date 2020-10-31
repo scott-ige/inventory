@@ -11,14 +11,16 @@ class CreateInventorySkuTable extends Migration
     public function up()
     {
         Schema::create('inventory_skus', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->timestamps();
-            $table->integer('inventory_id')->unsigned();
+            $table->unsignedInteger('inventory_id');
             $table->string('code');
 
+            /*
             $table->foreign('inventory_id')->references('id')->on('inventories')
                 ->onUpdate('restrict')
                 ->onDelete('cascade');
+            */
 
             /*
              * Make sure each SKU is unique

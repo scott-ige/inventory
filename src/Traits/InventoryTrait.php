@@ -10,6 +10,7 @@ use Stevebauman\Inventory\Exceptions\StockAlreadyExistsException;
 use Stevebauman\Inventory\InventoryServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
 
 /**
  * Trait InventoryTrait.
@@ -75,6 +76,8 @@ trait InventoryTrait
     /**
      * Overrides the models boot function to set the user
      * ID automatically to every new record.
+     *
+     * @version 1.8.0
      */
     public static function bootInventoryTrait()
     {
@@ -83,7 +86,11 @@ trait InventoryTrait
          * is being created
          */
         static::creating(function (Model $record) {
-            $record->user_id = static::getCurrentUserId();
+            try {
+                $record->created_by = static::getCurrentUserId();
+            } catch (NoUserLoggedInException $e) {
+                $record->created_by = null;
+            }
         });
 
         /*
