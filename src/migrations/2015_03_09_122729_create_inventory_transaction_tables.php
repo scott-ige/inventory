@@ -13,7 +13,7 @@ class CreateInventoryTransactionTables extends Migration
         Schema::create('inventory_transactions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('created_by')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->unsignedInteger('stock_id');
             $table->string('name')->nullable();
             $table->string('state');

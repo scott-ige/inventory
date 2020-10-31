@@ -54,4 +54,14 @@ trait UserIdentificationTrait
 
         throw new NoUserLoggedInException($message);
     }
+
+    /**
+     * Get the user foreign key.
+     *
+     * @return mixed
+     */
+    protected static function getUserForeignKey()
+    {
+        return Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'user_foreign_key', 'created_by');
+    }
 }

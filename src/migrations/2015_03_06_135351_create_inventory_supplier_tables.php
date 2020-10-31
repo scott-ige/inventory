@@ -33,7 +33,7 @@ class CreateInventorySupplierTables extends Migration
             $table->timestamps();
             $table->unsignedInteger('inventory_id');
             $table->unsignedInteger('supplier_id');
-            $table->foreignId('created_by')->nullable();
+            $table->foreignId('user_id')->nullable();
 
             /*
             $table->foreign('inventory_id')->references('id')->on('inventories')

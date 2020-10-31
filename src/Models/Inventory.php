@@ -18,11 +18,10 @@ class Inventory extends BaseModel
     protected $table = 'inventories';
 
     protected $fillable = [
-        'user_id',
+        'created_by',
         'category_id',
         'metric_id',
         'name',
-        'description',
     ];
 
     /**

@@ -64,4 +64,11 @@ return [
      */
     'sku_separator' => '',
 
+    /*
+     * The column name that is used to determine who created the record.
+     *
+     * @var string
+     */
+    'user_foreign_key' => 'created_by',
+
 ];

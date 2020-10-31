@@ -86,11 +86,7 @@ trait InventoryTrait
          * is being created
          */
         static::creating(function (Model $record) {
-            try {
-                $record->created_by = static::getCurrentUserId();
-            } catch (NoUserLoggedInException $e) {
-                $record->created_by = null;
-            }
+            $record->created_by = static::getCurrentUserId();
         });
 
         /*

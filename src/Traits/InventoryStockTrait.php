@@ -9,6 +9,7 @@ use Stevebauman\Inventory\Exceptions\InvalidQuantityException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
 
 /**
  * Trait InventoryStockTrait.
@@ -92,7 +93,7 @@ trait InventoryStockTrait
     public static function bootInventoryStockTrait()
     {
         static::creating(function (Model $model) {
-            $model->user_id = $model->getCurrentUserId();
+            $model->created_by = static::getCurrentUserId();
 
             /*
              * Check if a reason has been set, if not
