@@ -15,7 +15,7 @@ class CreateInventoryTables extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('category_id')->nullable();
-            $table->foreignId('user_id')->nullable();
+            $table->foreignId('created_by')->nullable();
             $table->foreignId('metric_id')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
@@ -39,10 +39,10 @@ class CreateInventoryTables extends Migration
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('user_id')->nullable();
+            $table->foreignId('created_by')->nullable();
             $table->foreignId('inventory_id')->nullable();
             $table->foreignId('location_id');
-            $table->decimal('quantity', 8, 2)->default(0);
+            $table->decimal('quantity', 8, 3)->default(0);
             $table->string('aisle')->nullable();
             $table->string('row')->nullable();
             $table->string('bin')->nullable();

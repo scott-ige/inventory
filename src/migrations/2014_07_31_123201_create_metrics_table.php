@@ -13,7 +13,7 @@ class CreateMetricsTable extends Migration
         Schema::create('metrics', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id')->nullable();
+            $table->foreignId('created_by')->nullable();
             $table->string('name');
             $table->string('symbol');
 
