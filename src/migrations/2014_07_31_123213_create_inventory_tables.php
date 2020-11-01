@@ -74,9 +74,9 @@ class CreateInventoryTables extends Migration
             $table->softDeletes();
             $table->foreignId('stock_id');
             $table->foreignId('created_by')->nullable();
-            $table->decimal('before', 8, 2)->default(0);
-            $table->decimal('after', 8, 2)->default(0);
-            $table->decimal('cost', 8, 2)->default(0)->nullable();
+            $table->decimal('before', 8, 3)->default(0);
+            $table->decimal('after', 8, 3)->default(0);
+            $table->decimal('cost', 8, 3)->default(0)->nullable();
             $table->string('reason')->nullable();
 
             /*

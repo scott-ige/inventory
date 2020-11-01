@@ -798,16 +798,17 @@ trait InventoryTrait
      * Adds the specified supplier to the current inventory item.
      *
      * @param $supplier
+     * @param int $createdBy null
      *
      * @throws InvalidSupplierException
      *
      * @return bool
      */
-    public function addSupplier($supplier)
+    public function addSupplier($supplier, int $createdBy = null)
     {
         $supplier = $this->getSupplier($supplier);
 
-        return $this->processSupplierAttach($supplier);
+        return $this->processSupplierAttach($supplier, $createdBy);
     }
 
     /**
@@ -916,16 +917,20 @@ trait InventoryTrait
      * Processes attaching a supplier to an inventory item.
      *
      * @param Model $supplier
-     *
+     * @param int $createdBy null
      * @return bool
      */
-    private function processSupplierAttach(Model $supplier)
+    private function processSupplierAttach(Model $supplier, int $createdBy = null)
     {
+        if (! $createdBy) {
+            $createdBy = static::getCurrentUserId();
+        }
+
         $this->dbStartTransaction();
 
         try {
             $this->suppliers()->attach($supplier, [
-                static::getForeignUserKey() => static::getCurrentUserId(),
+                static::getForeignUserKey() => $createdBy,
             ]);
 
             $this->dbCommitTransaction();

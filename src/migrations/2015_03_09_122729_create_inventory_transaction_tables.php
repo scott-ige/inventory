@@ -17,7 +17,7 @@ class CreateInventoryTransactionTables extends Migration
             $table->unsignedInteger('stock_id');
             $table->string('name')->nullable();
             $table->string('state');
-            $table->decimal('quantity', 8, 2)->default(0);
+            $table->decimal('quantity', 8, 3)->default(0);
 
             /*
             $table->foreign('user_id')->references('id')->on('users')
