@@ -536,7 +536,7 @@ trait InventoryTrait
     public function getSku()
     {
         return ($this->hasSku())
-            ? $this->sku->code()
+            ? $this->sku->code
             : null;
     }
 
@@ -697,7 +697,7 @@ trait InventoryTrait
              * The dev doesn't want the SKU overridden,
              * we'll thrown an exception
              */
-            if (!$overwrite) {
+            if (! $overwrite) {
                 $message = Lang::get('inventory::exceptions.SkuAlreadyExistsException');
 
                 throw new SkuAlreadyExistsException($message);

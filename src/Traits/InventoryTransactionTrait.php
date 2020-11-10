@@ -99,7 +99,7 @@ trait InventoryTransactionTrait
          * Make sure the transaction does not already have a history record
          * before creating one
          */
-        if (!$this->getLastHistoryRecord()) {
+        if (! $this->getLastHistoryRecord()) {
             $this->generateTransactionHistory($this->beforeState, $this->state, 0, $this->quantity);
         }
     }
@@ -545,7 +545,7 @@ trait InventoryTransactionTrait
 
         $this->quantity = $quantity;
 
-        if (!$reason) {
+        if (! $reason) {
             $reason = $this->getTransactionReason('reserved');
         }
 
@@ -847,7 +847,7 @@ trait InventoryTransactionTrait
 
         $this->state = $this::STATE_INVENTORY_RELEASED;
 
-        if (!$reason) {
+        if (! $reason) {
             $reason = $this->getTransactionReason('released');
         }
 
@@ -1136,7 +1136,7 @@ trait InventoryTransactionTrait
      */
     public function setQuantityAttribute($quantity)
     {
-        if (!$this->isPositive($quantity)) {
+        if (! $this->isPositive($quantity)) {
             $message = Lang::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'exceptions.InvalidQuantityException');
 
             throw new InvalidQuantityException($message);
