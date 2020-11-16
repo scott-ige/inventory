@@ -6,11 +6,12 @@ use Baum\Node;
 
 class Location extends Node
 {
-    /**
-     * The scoped location attributes.
-     *
-     * @var array
-     */
+    protected $table = 'locations';
+
+    protected $fillable = [
+        'name',
+    ];
+
     protected $scoped = ['belongs_to'];
 
     /**

@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
  * Class InventoryServiceProvider.
  *
  * @package Stevebauman\Inventory
- * @version 1.9.4
+ * @version 1.9.5
  */
 class InventoryServiceProvider extends ServiceProvider
 {
@@ -17,7 +17,7 @@ class InventoryServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '1.9.4';
+    const VERSION = '1.9.5';
 
     /**
      * The laravel version number. This is

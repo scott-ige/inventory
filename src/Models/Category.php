@@ -9,6 +9,12 @@ class Category extends Node
 {
     use CategoryTrait;
 
+    protected $table = 'categories';
+
+    protected $fillable = [
+        'name',
+    ];
+
     /**
      * The scoped category attrbiutes.
      *

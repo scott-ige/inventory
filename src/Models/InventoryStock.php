@@ -8,6 +8,17 @@ class InventoryStock extends Model
 {
     use InventoryStockTrait;
 
+    protected $table = 'inventory_stocks';
+
+    protected $fillable = [
+        'inventory_id',
+        'location_id',
+        'quantity',
+        'aisle',
+        'row',
+        'bin',
+    ];
+
     /**
      * The belongsTo inventory item relationship.
      *
