@@ -4,10 +4,17 @@ namespace Stevebauman\Inventory\Traits;
 
 use Stevebauman\Inventory\Helper;
 use Illuminate\Database\Eloquent\Model;
+use Stevebauman\Inventory\Traits\UserIdentificationTrait;
 
+/**
+ * Trait InventoryStockMovementTrait
+ *
+ * @package Stevebauman\Inventory\Traits
+ * @version 1.9.4
+ */
 trait InventoryStockMovementTrait
 {
-    use CommonMethodsTrait;
+    use CommonMethodsTrait, UserIdentificationTrait;
 
     /**
      * The belongsTo stock relationship.

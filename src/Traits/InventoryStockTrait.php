@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
+use Stevebauman\Inventory\Traits\UserIdentificationTrait;
 
 /**
  * Trait InventoryStockTrait
@@ -19,7 +20,7 @@ use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
  */
 trait InventoryStockTrait
 {
-    use CommonMethodsTrait;
+    use CommonMethodsTrait, UserIdentificationTrait;
 
     /**
      * Stores the reason for updating / creating a stock.
@@ -84,7 +85,7 @@ trait InventoryStockTrait
              * let's retrieve the default first entry reason
              */
             if (! $model->reason) {
-                $model->reason = Lang::get('inventory::reasons.first_record');
+                $model->reason = Lang::get('inventory.reasons.first_record');
             }
         });
 

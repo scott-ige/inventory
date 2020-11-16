@@ -20,14 +20,6 @@ class InventoryServiceProvider extends ServiceProvider
     const VERSION = '1.9.4';
 
     /**
-     * Stores the package configuration separator
-     * for Laravel 5 compatibility.
-     *
-     * @var string
-     */
-    public static $packageConfigSeparator = '::';
-
-    /**
      * The laravel version number. This is
      * used for the install commands.
      *
@@ -54,13 +46,6 @@ class InventoryServiceProvider extends ServiceProvider
             $this->package('stevebauman/inventory', 'stevebauman/inventory', __DIR__.'/..');
         } else {
             /*
-             * Set the proper configuration separator since
-             * retrieving configuration values in packages
-             * changed from '::' to '.'
-             */
-            $this::$packageConfigSeparator = '.';
-
-            /*
              * Set the local inventory laravel version for easy checking
              */
             $this::$laravelVersion = 8;
@@ -68,7 +53,7 @@ class InventoryServiceProvider extends ServiceProvider
             /*
              * Load the inventory translations from the inventory lang folder
              */
-            $this->loadTranslationsFrom(__DIR__.'/lang', 'inventory');
+            $this->loadTranslationsFrom(__DIR__ . '/lang', 'inventory');
 
             /*
              * Assign the configuration as publishable, and tag it as 'config'
@@ -124,7 +109,7 @@ class InventoryServiceProvider extends ServiceProvider
         /*
          * Include the helpers file
          */
-        include __DIR__. ' /helpers.php';
+        include __DIR__. '/helpers.php';
     }
 
     /**

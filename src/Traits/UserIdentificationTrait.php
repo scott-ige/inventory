@@ -41,7 +41,7 @@ trait UserIdentificationTrait
         }
 
         // Check if no user is allowed
-        if (Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'allow_no_user')) {
+        if (Config::get('inventory.' . 'allow_no_user')) {
             return;
         }
 
@@ -60,6 +60,6 @@ trait UserIdentificationTrait
      */
     protected static function getForeignUserKey()
     {
-        return Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'foreign_user_key', 'user_id');
+        return config('inventory.' . 'foreign_user_key', 'created_by');
     }
 }

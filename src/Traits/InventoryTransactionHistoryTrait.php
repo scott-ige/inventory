@@ -4,9 +4,12 @@ namespace Stevebauman\Inventory\Traits;
 
 use Stevebauman\Inventory\Helper;
 use Illuminate\Database\Eloquent\Model;
+use Stevebauman\Inventory\Traits\UserIdentificationTrait;
 
 trait InventoryTransactionHistoryTrait
 {
+    use UserIdentificationTrait;
+
     /**
      * Make sure we try and assign the current user if enabled.
      *

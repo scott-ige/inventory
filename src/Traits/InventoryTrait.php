@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
+use Stevebauman\Inventory\Traits\UserIdentificationTrait;
 
 /**
  * Trait InventoryTrait.
@@ -20,7 +21,7 @@ use Stevebauman\Inventory\Exceptions\NoUserLoggedInException;
  */
 trait InventoryTrait
 {
-    use CommonMethodsTrait;
+    use CommonMethodsTrait, UserIdentificationTrait;
 
     /**
      * The hasOne category relationship.

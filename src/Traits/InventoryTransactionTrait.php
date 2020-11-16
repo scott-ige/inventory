@@ -10,10 +10,12 @@ use Stevebauman\Inventory\InventoryServiceProvider;
 use Stevebauman\Inventory\Helper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Lang;
+use Stevebauman\Inventory\Traits\UserIdentificationTrait;
+
 
 trait InventoryTransactionTrait
 {
-    use CommonMethodsTrait;
+    use CommonMethodsTrait, UserIdentificationTrait;
 
     /**
      * Stores the state before an update.
@@ -1110,7 +1112,7 @@ trait InventoryTransactionTrait
     public function setQuantityAttribute($quantity)
     {
         if (! $this->isPositive($quantity)) {
-            $message = Lang::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'exceptions.InvalidQuantityException');
+            $message = Lang::get('inventory::exceptions.InvalidQuantityException');
 
             throw new InvalidQuantityException($message);
         }
