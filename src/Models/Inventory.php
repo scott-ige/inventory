@@ -10,7 +10,7 @@ use Stevebauman\Inventory\Traits\InventoryTrait;
  * Class Inventory
  *
  * @package Stevebauman\Inventory
- * @version 1.8.0
+ * @version 1.9.3
  */
 class Inventory extends Model
 {
@@ -44,7 +44,7 @@ class Inventory extends Model
      */
     public function category()
     {
-        return $this->hasOne(Category::class);
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     /**
@@ -54,7 +54,7 @@ class Inventory extends Model
      */
     public function metric()
     {
-        return $this->hasOne(Metric::class);
+        return $this->belongsTo(Metric::class, 'metric_id', 'id');
     }
 
     /**
