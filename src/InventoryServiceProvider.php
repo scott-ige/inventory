@@ -77,36 +77,6 @@ class InventoryServiceProvider extends ServiceProvider
     public function register()
     {
         /*
-         * Bind the install command
-         */
-        $this->app->bind('inventory:install', function () {
-            return new Commands\InstallCommand();
-        });
-
-        /*
-         * Bind the check-schema command
-         */
-        $this->app->bind('inventory:check-schema', function () {
-            return new Commands\SchemaCheckCommand();
-        });
-
-        /*
-         * Bind the run migrations command
-         */
-        $this->app->bind('inventory:run-migrations', function () {
-            return new Commands\RunMigrationsCommand();
-        });
-
-        /*
-         * Register the commands
-         */
-        $this->commands([
-            'inventory:install',
-            'inventory:check-schema',
-            'inventory:run-migrations',
-        ]);
-
-        /*
          * Include the helpers file
          */
         include __DIR__. '/helpers.php';
