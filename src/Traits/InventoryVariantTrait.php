@@ -4,9 +4,6 @@ namespace Stevebauman\Inventory\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Trait InventoryVariantTrait.
- */
 trait InventoryVariantTrait
 {
     /**
@@ -62,7 +59,7 @@ trait InventoryVariantTrait
      */
     public function hasVariants()
     {
-        if(count($this->getVariants()) > 0) {
+        if (count($this->getVariants()) > 0) {
             return true;
         }
 
@@ -80,7 +77,7 @@ trait InventoryVariantTrait
      */
     public function getVariants($recursive = false)
     {
-        if($recursive) {
+        if ($recursive) {
             return $this->variantsRecursive;
         } else {
             return $this->variants;
@@ -114,7 +111,7 @@ trait InventoryVariantTrait
 
         $variants = $this->getVariants();
 
-        if(count($variants) > 0) {
+        if (count($variants) > 0) {
             foreach($variants as $variant) {
                 $quantity = $quantity + $variant->getTotalStock();
 
@@ -148,7 +145,7 @@ trait InventoryVariantTrait
         $variant->category_id = $this->category_id;
         $variant->metric_id = $this->metric_id;
 
-        if (!empty($name)) {
+        if (! empty($name)) {
             $variant->name = $name;
         }
 
@@ -170,8 +167,10 @@ trait InventoryVariantTrait
     {
         $variant = $this->newVariant($name);
 
+        $this->dbStartTransaction();
+
         try {
-            if (!empty($description)) {
+            if (! empty($description)) {
                 $variant->description = $description;
             }
 
@@ -220,7 +219,7 @@ trait InventoryVariantTrait
      *
      * @return $this|bool
      */
-    private function processMakeVariant($itemId)
+    protected function processMakeVariant($itemId)
     {
         $this->dbStartTransaction();
 

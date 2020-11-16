@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
  * Class InventoryServiceProvider.
  *
  * @package Stevebauman\Inventory
- * @version 1.8.0
+ * @version 1.9.1
  */
 class InventoryServiceProvider extends ServiceProvider
 {
@@ -17,7 +17,7 @@ class InventoryServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '1.8.0';
+    const VERSION = '1.9.1';
 
     /**
      * Stores the package configuration separator
@@ -91,46 +91,22 @@ class InventoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        /*
-         * Bind the install command
-         */
-        $this->app->bind('inventory:install', function () {
-            return new Commands\InstallCommand();
-        });
+        // Load the inventory translations from the inventory lang folder
+        $this->loadTranslationsFrom(__DIR__.'/Lang', 'inventory');
 
-        /*
-         * Bind the check-schema command
-         */
-        $this->app->bind('inventory:check-schema', function () {
-            return new Commands\SchemaCheckCommand();
-        });
+        // Assign the configuration as publishable, and tag it as 'config'
+        $this->publishes([
+            __DIR__.'/Config/config.php' => config_path('inventory.php'),
+        ], 'config');
 
-        /*
-         * Bind the run migrations command
-         */
-        $this->app->bind('inventory:run-migrations', function () {
-            return new Commands\RunMigrationsCommand();
-        });
-
-        /*
-         * Register the commands
-         */
-        $this->commands([
-            'inventory:install',
-            'inventory:check-schema',
-            'inventory:run-migrations',
-        ]);
-
-        /*
-         * Include the helpers file
-         */
-        include __DIR__.'/helpers.php';
+        // Assign the migrations as publishable, and tag it as 'migrations'
+        $this->publishes([
+            __DIR__.'/Migrations/' => base_path('database/migrations'),
+        ], 'migrations');
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function provides()
     {
