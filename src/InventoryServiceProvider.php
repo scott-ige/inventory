@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
  * Class InventoryServiceProvider.
  *
  * @package Stevebauman\Inventory
- * @version 1.9.4
+ * @version 1.9.5
  */
 class InventoryServiceProvider extends ServiceProvider
 {
@@ -17,7 +17,7 @@ class InventoryServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '1.9.4';
+    const VERSION = '1.9.5';
 
     /**
      * The laravel version number. This is
@@ -76,36 +76,6 @@ class InventoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        /*
-         * Bind the install command
-         */
-        $this->app->bind('inventory:install', function () {
-            return new Commands\InstallCommand();
-        });
-
-        /*
-         * Bind the check-schema command
-         */
-        $this->app->bind('inventory:check-schema', function () {
-            return new Commands\SchemaCheckCommand();
-        });
-
-        /*
-         * Bind the run migrations command
-         */
-        $this->app->bind('inventory:run-migrations', function () {
-            return new Commands\RunMigrationsCommand();
-        });
-
-        /*
-         * Register the commands
-         */
-        $this->commands([
-            'inventory:install',
-            'inventory:check-schema',
-            'inventory:run-migrations',
-        ]);
-
         /*
          * Include the helpers file
          */
