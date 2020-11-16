@@ -1,6 +1,6 @@
 {
     "name": "stevebauman/inventory",
-    "description": "Inventory management using Laravel 4 / 5",
+    "description": "Inventory management using Laravel 8",
     "keywords": ["laravel", "inventory", "inventory-management"],
     "authors": [
         {
@@ -10,13 +10,8 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=5.4.0",
-        "illuminate/database": "5.*",
-        "illuminate/support": "5.*",
-        "baum/baum": "1.1.*"
-    },
-    "require-dev": {
-        "orchestra/testbench": "3.1.*"
+        "php": "^7.1.3",
+        "laravel/framework": "^8.0"
     },
     "archive": {
         "exclude": ["/tests"]
