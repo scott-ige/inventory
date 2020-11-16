@@ -12,7 +12,7 @@ use Stevebauman\Inventory\Traits\InventoryTrait;
  * @package Stevebauman\Inventory
  * @version 1.8.0
  */
-class Inventory extends BaseModel
+class Inventory extends Model
 {
     use InventoryTrait;
     use InventoryVariantTrait;
