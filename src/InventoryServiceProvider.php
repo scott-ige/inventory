@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
  * Class InventoryServiceProvider.
  *
  * @package Stevebauman\Inventory
- * @version 1.9.1
+ * @version 1.9.4
  */
 class InventoryServiceProvider extends ServiceProvider
 {
@@ -17,7 +17,7 @@ class InventoryServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '1.9.1';
+    const VERSION = '1.9.4';
 
     /**
      * Stores the package configuration separator
@@ -63,7 +63,7 @@ class InventoryServiceProvider extends ServiceProvider
             /*
              * Set the local inventory laravel version for easy checking
              */
-            $this::$laravelVersion = 5;
+            $this::$laravelVersion = 8;
 
             /*
              * Load the inventory translations from the inventory lang folder
@@ -91,22 +91,46 @@ class InventoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Load the inventory translations from the inventory lang folder
-        $this->loadTranslationsFrom(__DIR__.'/Lang', 'inventory');
+        /*
+         * Bind the install command
+         */
+        $this->app->bind('inventory:install', function () {
+            return new Commands\InstallCommand();
+        });
 
-        // Assign the configuration as publishable, and tag it as 'config'
-        $this->publishes([
-            __DIR__.'/Config/config.php' => config_path('inventory.php'),
-        ], 'config');
+        /*
+         * Bind the check-schema command
+         */
+        $this->app->bind('inventory:check-schema', function () {
+            return new Commands\SchemaCheckCommand();
+        });
 
-        // Assign the migrations as publishable, and tag it as 'migrations'
-        $this->publishes([
-            __DIR__.'/Migrations/' => base_path('database/migrations'),
-        ], 'migrations');
+        /*
+         * Bind the run migrations command
+         */
+        $this->app->bind('inventory:run-migrations', function () {
+            return new Commands\RunMigrationsCommand();
+        });
+
+        /*
+         * Register the commands
+         */
+        $this->commands([
+            'inventory:install',
+            'inventory:check-schema',
+            'inventory:run-migrations',
+        ]);
+
+        /*
+         * Include the helpers file
+         */
+        include __DIR__. ' /helpers.php';
     }
 
     /**
-     * {@inheritdoc}
+     * Get the services provided by the provider.
+     *
+     * @return array
      */
     public function provides()
     {
