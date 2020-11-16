@@ -8,6 +8,17 @@ class InventoryStockMovement extends Model
 {
     use InventoryStockMovementTrait;
 
+    protected $table = 'inventory_stock_movements';
+
+    protected $fillable = [
+        'stock_id',
+        'user_id',
+        'before',
+        'after',
+        'cost',
+        'reason',
+    ];
+
     /**
      * The belongsTo stock relationship.
      *

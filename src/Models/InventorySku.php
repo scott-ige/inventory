@@ -8,6 +8,13 @@ class InventorySku extends Model
 {
     use InventorySkuTrait;
 
+    protected $table = 'inventory_skus';
+
+    protected $fillable = [
+        'inventory_id',
+        'code',
+    ];
+
     /**
      * The belongsTo item trait.
      *
