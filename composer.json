@@ -26,12 +26,6 @@
             "Stevebauman\\Inventory\\": "src/"
         }
     },
-    "autoload-dev":
-    {
-        "psr-4": {
-            "Stevebauman\\Inventory\\Tests\\": "tests/"
-        }
-    },
     "minimum-stability": "stable",
     "extra": {
         "laravel": {
