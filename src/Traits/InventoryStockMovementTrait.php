@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 trait InventoryStockMovementTrait
 {
     use DatabaseTransactionTrait,
-        CommonMethodsTrait,
         UserIdentificationTrait;
 
     /**
