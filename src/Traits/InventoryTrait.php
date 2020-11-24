@@ -518,6 +518,9 @@ trait InventoryTrait
         // Get the set SKU prefix length from the configuration file
         $prefixLength = Config::get('inventory.sku_prefix_length');
 
+        // Get the set SKU column
+        $prefixAttribute = Config::get('inventory.sku_prefix_column', 'name');
+
         // Get the set SKU separator
         $skuSeparator = Config::get('inventory.sku_separator');
 
@@ -527,7 +530,9 @@ trait InventoryTrait
 
         // Trim the category name to remove blank spaces, then grab
         // the first 3 letters of the string, and uppercase them
-        $prefix = strtoupper(substr(trim($this->category->getAttribute('name')), 0, intval($prefixLength)));
+        $prefix = $this->category->getAttribute($prefixAttribute);
+
+        $prefix = strtoupper(substr(trim($prefix), 0, intval($prefixLength)));
 
         // We'll make sure the prefix length is greater
         // than zero before we try and generate an SKU
