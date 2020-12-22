@@ -406,39 +406,37 @@ trait InventoryStockTrait
      */
     protected function processTakeOperation($taking, $reason = '', $cost = 0)
     {
-        if($this->isValidQuantity($taking) && $this->hasEnoughStock($taking)) {
-            $available = $this->getAttribute('quantity');
+        $left = $this->quantity - $taking;
 
-            /*
-             * If the updated total and the beginning total are the same, we'll check if
-             * duplicate movements are allowed. We'll return the current record if
-             * they aren't.
-             */
-            if ($left == $this->quantity && ! $this->allowDuplicateMovementsEnabled()) {
+        /*
+         * If the updated total and the beginning total are the same, we'll check if
+         * duplicate movements are allowed. We'll return the current record if
+         * they aren't.
+         */
+        if ($left == $this->quantity && !$this->allowDuplicateMovementsEnabled()) {
+            return $this;
+        }
+
+        $this->quantity = $left;
+
+        $this->setReason($reason);
+
+        $this->setCost($cost);
+
+        $this->dbStartTransaction();
+
+        try {
+            if ($this->save()) {
+                $this->dbCommitTransaction();
+
+                $this->fireEvent('inventory.stock.taken', [
+                    'stock' => $this,
+                ]);
+
                 return $this;
             }
-
-            $this->setAttribute('quantity', $left);
-
-            $this->setReason($reason);
-
-            $this->setCost($cost);
-
-            $this->dbStartTransaction();
-
-            try {
-                if ($this->save()) {
-                    $this->dbCommitTransaction();
-
-                    $this->fireEvent('inventory.stock.taken', [
-                        'stock' => $this,
-                    ]);
-
-                    return $this;
-                }
-            } catch (\Exception $e) {
-                $this->dbRollbackTransaction();
-            }
+        } catch (\Exception $e) {
+            $this->dbRollbackTransaction();
         }
 
         return false;
