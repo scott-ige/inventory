@@ -56,6 +56,6 @@ class InventoryStock extends Model
      */
     public function location()
     {
-        return $this->hasOne(Location::class);
+        return $this->belongsTo(Location::class);
     }
 }
