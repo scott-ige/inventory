@@ -10,6 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 trait AssemblyTrait
 {
     /**
+     * Maximum level for assemby list.
+     * 
+     * @var int 
+     */
+    private $maxLevel = 1;
+    
+    /**
      * The items assembly cache key.
      *
      * @var string
@@ -22,6 +29,16 @@ trait AssemblyTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     abstract public function assemblies();
+    
+    /**
+     * Get the maximum level of the assembly list.
+     * 
+     * @return int
+     */
+    public function getMaxLevel()
+    {
+        return $this->maxLevel;
+    }
 
     /**
      * The belongsToMany recursive assemblies relationship.
@@ -146,6 +163,8 @@ trait AssemblyTrait
 
             $level++;
         }
+        
+        $this->maxLevel = $level;
 
         return $list;
     }
