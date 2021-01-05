@@ -11,11 +11,11 @@ trait AssemblyTrait
 {
     /**
      * Maximum level for assemby list.
-     * 
-     * @var int 
+     *
+     * @var int
      */
-    private $maxLevel = 1;
-    
+    protected $maxLevel = 1;
+
     /**
      * The items assembly cache key.
      *
@@ -29,10 +29,10 @@ trait AssemblyTrait
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     abstract public function assemblies();
-    
+
     /**
      * Get the maximum level of the assembly list.
-     * 
+     *
      * @return int
      */
     public function getMaxLevel()
@@ -163,7 +163,7 @@ trait AssemblyTrait
 
             $level++;
         }
-        
+
         $this->maxLevel = $level;
 
         return $list;
