@@ -3,7 +3,6 @@
 namespace Stevebauman\Inventory\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Stevebauman\Inventory\Models\CustomAttribute;
 use Stevebauman\Inventory\Exceptions\InvalidCustomAttributeException;
 use Stevebauman\Inventory\Exceptions\RequiredCustomAttributeException;
@@ -16,13 +15,6 @@ trait CustomAttributeTrait
     use DatabaseTransactionTrait;
 
     /**
-     * The items customAttribute cache key.
-     *
-     * @var string
-     */
-    protected $customAttributeCacheKey = 'inventory::customAttribute.';
-
-    /**
      * The hasMany customAttributeValues relationship.
      * 
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -30,69 +22,12 @@ trait CustomAttributeTrait
     abstract public function customAttributeValues();
     
     /**
+     * TODO: refactor this relationship out in favor of CustomAttribute->default_val
      * The hasMany customAttributeDefaults relationship.
      * 
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     abstract public function customAttributeDefaults();
-
-    // NOTE: Cached attributes are unused in current implementation
-    // /**
-    //  * Returns the current item's custom attribute cache key
-    //  * 
-    //  * @return string
-    //  */
-    // private function getCustomAttributeCacheKey()
-    // {
-    //     return $this->customAttributeCacheKey.$this->getKey();
-    // }
-
-    // /**
-    //  * Returns boolean based on whether the current item
-    //  * has cached custom attributes
-    //  * 
-    //  * @return bool
-    //  */
-    // public function hasCachedCustomAttributes() 
-    // {
-    //     return Cache::has($this->getCustomAttributeCacheKey());
-    // }
-
-    // /**
-    //  * Puts the given custom attribute into the cache for
-    //  * the current item
-    //  * 
-    //  * @return bool
-    //  */
-    // public function addCachedCustomAttribute($attr) 
-    // {
-    //     return Cache::forever($this->getCustomAttributeCacheKey(), $attr);
-    // }
-
-    // /**
-    //  * Returns the current item's cached custom attributes if
-    //  * they exist in the cache, or false otherwise
-    //  * 
-    //  * @return bool|Collection
-    //  */
-    // public function getCachedCustomAttributes() 
-    // {
-    //     if ($this->hasCachedCustomAttributes()) {
-    //         return Cache::get($this->getCustomAttributeCacheKey());
-    //     }
-
-    //     return false;
-    // }
-
-    // /**
-    //  * Removes the current item's custom attributes from the cache
-    //  * 
-    //  * @return bool
-    //  */
-    // public function forgetCachedCustomAttributes()
-    // {
-    //     return Cache::forget($this->getCustomAttributeCacheKey());
-    // }
 
     /**
      * Returns true if item has given custom attribute, or 
@@ -121,13 +56,35 @@ trait CustomAttributeTrait
 
         if ($attr instanceof Model) {
             return $attr;
-        } else if (is_numeric($attr)) {
-            $res = $this->customAttributes()->where('custom_attributes.id', $attr)->get()->first();
         } else {
-            $res = $this->customAttributes()->where('custom_attributes.name', $attr)->get()->first();
+            $res = $this->customAttributes()->where('custom_attributes.name', $attr)->orWhere('custom_attributes.id', $attr)->get()->first();
         }
 
         return $res ? $res : false;
+    }
+
+    /**
+     * Resolves a customAttributeObject given an id, name, or Model
+     * - for retrieving a custom attribute object that may or may not
+     * be attached to $this inventory model
+     *
+     * @param int|string|Model $attr
+     * 
+     * @return Model
+     * 
+     * @throws InvalidCustomAttributeException
+     */
+    public function resolveCustomAttributeObject($attr) 
+    {
+        if ($attr instanceof Model) return $attr;
+
+        $attrObj = $this->hasCustomAttribute($attr) ? 
+            $this->getCustomAttribute($attr) :
+            CustomAttribute::where('id', $attr)->orWhere('name', $attr)->first();
+
+        if (!$attrObj) throw new InvalidCustomAttributeException('Could not find custom attribute with key "'.$attr.'"');
+
+        return $attrObj;
     }
 
     /**
@@ -256,6 +213,7 @@ trait CustomAttributeTrait
         $name = strtolower($displayName);
         $name = preg_replace('/\s+/', '_', $name);
         
+        // TODO: deal with all this default logic:
         $defaultIsNull = is_null($defaultValue);
         
         $hasDefault = $defaultIsNull ? false : true;
@@ -343,6 +301,7 @@ trait CustomAttributeTrait
      */
     private function createCustomAttribute($name, $displayName, $rawType, $type, $hasDefault, $defaultValue = null, $required = false, $rule = null, $ruleDesc = null)
     {
+        // TODO: put default value in this object
         $newCustomAttribute = [
             'name' => $name,
             'display_name' => $displayName,
@@ -481,29 +440,8 @@ trait CustomAttributeTrait
     }
 
     /**
-     * Resolves a customAttributeObject given an id, name, or Model
-     *
-     * @param int|string|Model $attr
+     * TODO: this may not be necessary without custom_attribute_default
      * 
-     * @return Model
-     * 
-     * @throws InvalidCustomAttributeException
-     */
-    public function resolveCustomAttributeObject($attr) 
-    {
-        if ($attr instanceof Model) return $attr;
-
-        $attrObj = $this->hasCustomAttribute($attr) ? 
-            $this->getCustomAttribute($attr) :
-            CustomAttribute::where('id', $attr)->orWhere('name', $attr)->first();
-
-        if (!$attrObj) throw new InvalidCustomAttributeException('Could not find custom attribute with key "'.$attr.'"');
-
-        return $attrObj;
-    }
-
-    
-    /**
      * Gets a customAttributeDefault object by custom_attribute_id and
      * inventory_id
      * 
@@ -614,6 +552,8 @@ trait CustomAttributeTrait
     }
 
     /**
+     * TODO: refactor this method to set the default on the CustomAttribute model itself
+     * 
      * Sets the given custom attribute default for this item
      *
      * @param string|int|Model $attr
