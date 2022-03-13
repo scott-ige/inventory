@@ -2,6 +2,9 @@
 
 namespace Stevebauman\Inventory\Tests;
 
+use Stevebauman\Inventory\Models\Inventory;
+use Stevebauman\Inventory\Models\CustomAttributeValue;
+
 /**
  * Custom Attribute Test
  */
@@ -384,6 +387,36 @@ class CustomAttributeTest extends FunctionalTestCase
         $this->assertEquals(strtotime($allAttrVals['the_time_and_day_of_these_most_freshest_of_properties']), strtotime('3-1-2021'));
     }
 
+    public function testCanQueryInventoryWithCustomAttributeValues() {
+        $item = $this->newInventory();
+        $attr = $item->addCustomAttribute('string', 'The newest property around');
+        $item->setCustomAttribute($attr, 'a value');
+        
+        $q = Inventory::with('customAttributeValues')->where('inventories.id', $item->id);
+
+        $results = $q->get();
+
+        $first = $results->first();
+
+        $this->assertEquals($first->toArray()['custom_attribute_values'][0]['string_val'], 'a value');
+    }
+
+    public function testCanQueryCustomAttributeValuesWithInventory() {
+        $item = $this->newInventory();
+        $attr = $item->addCustomAttribute('string', 'Even newer than that');
+        $item->setCustomAttribute($attr, 'value again');
+
+        $q = CustomAttributeValue::with('inventories')->where('custom_attribute_values.custom_attribute_id', $attr->id);
+
+        $results = $q->get();
+
+        $first = $results->first();
+
+        // Note that since this is a many-to-one relationship (belongsTo), the
+        // 'inventories' key contains only the single model, as opposed to the previous
+        // test, where the 'custom_attribute_values' key contains many models.
+        $this->assertEquals($first->toArray()['inventories']['id'], $item->id);
+    }
 
     
     /*
