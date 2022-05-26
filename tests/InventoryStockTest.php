@@ -53,9 +53,7 @@ class InventoryStockTest extends FunctionalTestCase
     {
         $stock = $this->newInventoryStock();
 
-        $newLocation = Location::create([
-            'name' => 'New Location',
-        ]);
+        $newLocation = $this->newLocation();
 
         DB::shouldReceive('beginTransaction')->once()->shouldReceive('commit')->once();
         Event::shouldReceive('dispatch')->once();
@@ -193,9 +191,7 @@ class InventoryStockTest extends FunctionalTestCase
 
         $locationFrom = Location::find($newStock->location_id);
 
-        $locationTo = new Location();
-        $locationTo->name = 'New Location';
-        $locationTo->save();
+        $locationTo = $this->newLocation();
 
         $item = Inventory::find($newStock->inventory_id);
 
@@ -235,5 +231,58 @@ class InventoryStockTest extends FunctionalTestCase
         $transaction = $stock->newTransaction();
 
         $this->assertInstanceOf('Stevebauman\Inventory\Interfaces\StateableInterface', $transaction);
+    }
+
+    public function testRollbackStockMovement() {
+        $stock = $this->newInventoryStock();
+        $initialQuantity = $stock->quantity;
+
+        $txn = $stock->newTransaction();
+
+        $stock->add(20, 'fresh inventory', 50);
+
+        $this->assertEquals($initialQuantity + 20, $stock->quantity);
+
+        $stock->rollback();
+
+        $this->assertEquals($initialQuantity, $stock->quantity);
+
+        $stock->remove(10, 'removing inventory cheaper', 40);
+
+        $this->assertEquals($initialQuantity - 10, $stock->quantity);
+
+        $stock->rollback($stock->getLastMovement());
+
+        $this->assertEquals($initialQuantity, $stock->quantity);
+
+        $stock->add(10, 'adding inventory cheaper', 40);
+
+        $this->assertEquals($initialQuantity + 10, $stock->quantity);
+
+        $stock->rollbackMovement($stock->getLastMovement());
+
+        $this->assertEquals($initialQuantity, $stock->quantity);
+
+        $stock->add(10, 'adding inventory even cheaper', 30);
+
+        $this->assertEquals($initialQuantity + 10, $stock->quantity);
+
+        $lastMovement = $stock->getLastMovement();
+
+        $stock->rollbackMovement($lastMovement->id);
+
+        $this->assertEquals($initialQuantity, $stock->quantity);
+
+        $stock->add(10, 'adding inventory even cheaperer', 25);
+
+        $this->assertEquals($initialQuantity + 10, $stock->quantity);
+
+        $lastMovement = $stock->getLastMovement();
+        $stock->add(10, 'adding inventory even cheaper again', 20);
+        $stock->add(10, 'adding inventory even cheaper for a third time', 15);
+
+        $rollbacks = $stock->rollback($lastMovement->id, true);
+
+        $this->assertEquals($initialQuantity, $stock->quantity);
     }
 }

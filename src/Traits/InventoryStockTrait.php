@@ -328,7 +328,7 @@ trait InventoryStockTrait
      */
     public function getLastMovement()
     {
-        $movement = $this->movements()->orderBy('created_at', 'DESC')->first();
+        $movement = $this->movements()->orderBy('id', 'DESC')->first();
 
         if ($movement) {
             return $movement;
@@ -611,8 +611,8 @@ trait InventoryStockTrait
          */
         $movements = $this
             ->movements()
-            ->where('created_at', '>=', $movement->getOriginal('created_at'))
-            ->orderBy('created_at', 'DESC')
+            ->where('id', '>=', $movement->getOriginal('id'))
+            ->orderBy('id', 'DESC')
             ->get();
 
         $rollbacks = [];
