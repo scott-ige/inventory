@@ -4,6 +4,7 @@ namespace Stevebauman\Inventory\Traits;
 
 use Stevebauman\Inventory\Exceptions\InvalidLocationException;
 use Illuminate\Support\Facades\Lang;
+use Stevebauman\Inventory\Models\Location;
 
 /**
  * Trait LocationTrait.
@@ -24,6 +25,18 @@ trait LocationTrait
     {
         if ($this->isLocation($location)) {
             return $location;
+        } else if (is_numeric($location)) {
+            try {
+                $result = Location::where('id', '=', $location)->first();
+
+                return $result;
+            } catch (\Exception $e) {
+                $message = Lang::get('inventory::exceptions.InvalidLocationException', [
+                    'location' => $location,
+                ]);
+
+                throw new InvalidLocationException($message);
+            }            
         } else {
             $message = Lang::get('inventory::exceptions.InvalidLocationException', [
                 'location' => $location,
