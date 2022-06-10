@@ -285,4 +285,16 @@ class InventoryStockTest extends FunctionalTestCase
 
         $this->assertEquals($initialQuantity, $stock->quantity);
     }
+
+    public function testNumericLocation() {
+        $location = $this->newLocation();
+
+        $item = $this->newInventory();
+
+        $item->createStockOnLocation(42, $location->id, "New stuff");
+
+        $newQuantity = $item->getTotalStock();
+
+        $this->assertEquals(42, $newQuantity);
+    }
 }
