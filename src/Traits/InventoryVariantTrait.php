@@ -4,6 +4,7 @@ namespace Stevebauman\Inventory\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Lang;
+use Stevebauman\Inventory\Exceptions\InvalidSkuException;
 use Stevebauman\Inventory\Exceptions\InvalidVariantException;
 
 /**
@@ -111,18 +112,24 @@ trait InventoryVariantTrait
      * ID, category ID, and metric ID set to the current item's
      * for the creation of a variant.
      *
+     * @param string $sku
      * @param string $name
      *
      * @return Model
+     * 
+     * @throws InvalidSkuException
      */
-    public function newVariant($name = '')
+    public function newVariant($sku, $name = '')
     {
+        if (empty($sku)) {
+            $msg = Lang::get('inventory::exceptions.InvalidSkuException');
+            throw new InvalidSkuException($msg);
+        }
         $variant = new $this();
-
         $variant->parent_id = $this->getKey();
         $variant->category_id = $this->category_id;
         $variant->metric_id = $this->metric_id;
-
+        $variant->sku = $sku;
         if (!empty($name)) {
             $variant->name = $name;
         }
@@ -134,6 +141,7 @@ trait InventoryVariantTrait
      * Creates a new variant instance, saves it,
      * and returns the resulting variant.
      *
+     * @param string     $sku
      * @param string     $name
      * @param string     $description
      * @param int|string $categoryId
@@ -143,12 +151,12 @@ trait InventoryVariantTrait
      * 
      * @throws InvalidVariantException
      */
-    public function createVariant($name = '', $description = '', $categoryId = null, $metricId = null)
+    public function createVariant($sku, $name = '', $description = '', $categoryId = null, $metricId = null)
     {
-        if (!$this->isVariant()) {
-            $variant = $this->newVariant($name);
-    
+        if (!$this->isVariant()) {    
             try {
+                $variant = $this->newVariant($sku, $name);
+
                 if (!empty($description)) {
                     $variant->description = $description;
                 }

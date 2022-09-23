@@ -155,6 +155,7 @@ class InventoryTest extends FunctionalTestCase
         
         $newItem = Inventory::create([
             'name' => 'Widget',
+            'sku' => $this->generateSku().'-PARENT',
             'description' => 'It\'s a thing that does stuff',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
@@ -176,6 +177,7 @@ class InventoryTest extends FunctionalTestCase
         
         $newItem = Inventory::create([
             'name' => 'Widget',
+            'sku' => $this->generateSku().'-PARENT',
             'description' => 'It\'s a thing that does other things',
             'metric_id' => $metric->id,
             'category_id' => $category->id,

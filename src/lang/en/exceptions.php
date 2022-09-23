@@ -13,6 +13,8 @@ return [
     'InvalidComponentException' => 'Component already exists in this bundle',
 
     'InvalidItemException' => 'Item :item is invalid',
+
+    'InvalidSkuException' => 'Item :sku is invalid',
     
     'InvalidLocationException' => 'Location :location is invalid',
 

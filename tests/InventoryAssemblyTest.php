@@ -34,6 +34,7 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $childItem = $this->newInventory([
             'name' => 'Child Item',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
@@ -56,12 +57,14 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $childItem = $this->newInventory([
             'name' => 'Child Item',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
 
         $childItem2 = $this->newInventory([
             'name' => 'Child Item 2',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
@@ -85,6 +88,7 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $childItem = $this->newInventory([
             'name' => 'Child Item',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
@@ -144,6 +148,7 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $childItem = $this->newInventory([
             'name' => 'Child Item',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
@@ -161,6 +166,7 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $childItem = $this->newInventory([
             'name' => 'Child Item',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
@@ -184,12 +190,14 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $childItem = $this->newInventory([
             'name' => 'Child Item',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
 
         $childItem2 = $this->newInventory([
             'name' => 'Child Item 2',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
@@ -213,6 +221,7 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $childItem = $this->newInventory([
             'name' => 'Child Item',
+            'sku' => $this->generateSku(),
             'metric_id' => $item->metric_id,
             'category_id' => $item->category_id,
         ]);
@@ -246,18 +255,21 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $table = $this->newInventory([
             'name' => 'Table',
+            'sku' => $this->generateSku(),
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
         $tableTop = $this->newInventory([
             'name' => 'Table Top',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $tableLegs = $this->newInventory([
             'name' => 'Table Legs',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
@@ -288,24 +300,28 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $table = $this->newInventory([
             'name' => 'Table',
+            'sku' => $this->generateSku(),
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
         $tableTop = $this->newInventory([
             'name' => 'Table Top',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $tableLegs = $this->newInventory([
             'name' => 'Table Legs',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $screws = $this->newInventory([
             'name' => 'Screws',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
@@ -368,12 +384,14 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $table = $this->newInventory([
             'name' => 'Table',
+            'sku' => $this->generateSku(),
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
         $tableTop = $this->newInventory([
             'name' => 'Table Top',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
@@ -409,42 +427,49 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $table = $this->newInventory([
             'name' => 'Table',
+            'sku' => $this->generateSku(),
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
         $tableTop = $this->newInventory([
             'name' => 'Table Top',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $tableLegs = $this->newInventory([
             'name' => 'Table Legs',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $screws = $this->newInventory([
             'name' => 'Screws',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $metal = $this->newInventory([
             'name' => 'Metal',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $ore = $this->newInventory([
             'name' => 'Ore',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $flux = $this->newInventory([
             'name' => 'Flux',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
@@ -505,6 +530,7 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $table = $this->newInventory([
             'name' => 'Table',
+            'sku' => $this->generateSku(),
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
@@ -522,30 +548,35 @@ class InventoryAssemblyTest extends FunctionalTestCase
 
         $table = $this->newInventory([
             'name' => 'Table',
+            'sku' => $this->generateSku(),
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
         $tableTop = $this->newInventory([
             'name' => 'Table Top',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $tableLegs = $this->newInventory([
             'name' => 'Table Legs',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $screws = $this->newInventory([
             'name' => 'Screws',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);
 
         $metal = $this->newInventory([
             'name' => 'Metal',
+            'sku' => $this->generateSku(),
             'metric_id' => $table->metric_id,
             'category_id' => $table->category_id,
         ]);

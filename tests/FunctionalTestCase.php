@@ -261,22 +261,6 @@ class FunctionalTestCase extends TestCase
                     ->onDelete('set null');
             });
         
-            DB::schema()->create('inventory_skus', function ($table) {
-                $table->id();
-                $table->timestamps();
-                $table->foreignId('inventory_id')->unsigned();
-                $table->string('code', 24);
-
-                $table->foreign('inventory_id')->references('id')->on('inventories')
-                    ->onUpdate('restrict')
-                    ->onDelete('cascade');
-
-                /*
-                * Make sure each SKU is unique
-                */
-                $table->unique(['code']);
-            });
-       
             DB::schema()->create('suppliers', function ($table) {
                 $table->id();
                 $table->timestamps();
@@ -459,6 +443,11 @@ class FunctionalTestCase extends TestCase
         DB::schema()->dropAllTables();
     }
 
+    protected function generateSku()
+    {
+        return self::$faker->regexify('[A-Z0-9]{3,6}-[A-Z0-9]+-[A-Z0-9]+');
+    }
+
     /**
      * @param array $attributes
      *
@@ -477,6 +466,7 @@ class FunctionalTestCase extends TestCase
         return Inventory::create([
             'metric_id' => $metric->id,
             'category_id' => $category->id,
+            'sku' => $this->generateSku(),
             'name' => 'Milk',
             'description' => 'Delicious Milk',
         ]);
@@ -559,18 +549,6 @@ class FunctionalTestCase extends TestCase
         $stock->save();
 
         return $stock;
-    }
-
-    /**
-     * @return InventorySku
-     */
-    protected function newInventorySku()
-    {
-        $item = $this->newInventory();
-        
-        // Item already has a sku, dammit.
-        // return $item->generateSku();
-        return $item->with("sku")->first()->sku;
     }
 
     /**
