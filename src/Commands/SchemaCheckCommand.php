@@ -51,7 +51,6 @@ class SchemaCheckCommand extends Command
         'suppliers',
         'inventory',
         'inventories',
-        'inventory_skus',
         'inventory_stocks',
         'inventory_stock_movements',
         'inventory_suppliers',

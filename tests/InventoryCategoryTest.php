@@ -35,19 +35,22 @@ class InventoryCategoryTest extends FunctionalTestCase
         ]);
 
         $productItem = Inventory::create([
-            'name' => '',
+            'name' => 'Item 1',
+            'sku' => $this->generateSku(),
             'category_id' => $productsCategory->id,
             'metric_id' => $metric->id,
         ]);
 
         $miscItem = Inventory::create([
-            'name' => 'Item 1',
+            'name' => 'Item 2',
+            'sku' => $this->generateSku(),
             'category_id' => $miscCategory->id,
             'metric_id' => $metric->id,
         ]);
 
         $miscItem2 = Inventory::create([
-            'name' => 'Item 2',
+            'name' => 'Item 3',
+            'sku' => $this->generateSku(),
             'category_id' => $miscCategory->id,
             'metric_id' => $metric->id,
         ]);

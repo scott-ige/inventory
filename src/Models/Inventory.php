@@ -26,6 +26,7 @@ class Inventory extends BaseModel
         'category_id',
         'metric_id',
         'name',
+        'sku',
         'description',
         'is_parent',
         'is_bundle',
@@ -49,16 +50,6 @@ class Inventory extends BaseModel
     public function metric()
     {
         return $this->hasOne(Metric::class, 'id', 'metric_id');
-    }
-
-    /**
-     * The hasOne sku relationship.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function sku()
-    {
-        return $this->hasOne(InventorySku::class, 'inventory_id', 'id');
     }
 
     /**

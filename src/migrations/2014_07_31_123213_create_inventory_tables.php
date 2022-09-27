@@ -27,6 +27,7 @@ class CreateInventoryTables extends Migration
             $table->foreignId('created_by')->unsigned()->nullable();
             $table->foreignId('metric_id')->unsigned();
             $table->string('name');
+            $table->string('sku')->unique();
             $table->text('description')->nullable();
 
             $table->foreign('category_id')->references('id')->on('categories')

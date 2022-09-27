@@ -24,12 +24,18 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $milk = Inventory::find($item->id);
 
-        $chocolateMilk = $milk->newVariant();
+        $sku = $this->generateSku().'CHOCOLATE-MILK';
 
-        $chocolateMilk->name = 'Chocolate Milk';
+        $chocolateMilk = $milk->newVariant($sku);
+
+        $name = 'Chocolate Milk';
+
+        $chocolateMilk->name = $name;
 
         $chocolateMilk->save();
 
+        $this->assertEquals($chocolateMilk->sku, $sku);
+        $this->assertEquals($chocolateMilk->name, $name);
         $this->assertEquals($chocolateMilk->parent_id, $milk->id);
         $this->assertEquals($chocolateMilk->category_id, $milk->category_id);
         $this->assertEquals($chocolateMilk->metric_id, $milk->metric_id);
@@ -50,18 +56,21 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Pop',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
+        $sku = $this->generateSku().'CHERRY-COKE';
         $name = 'Cherry Coke';
         $description = 'Delicious Cherry Coke';
 
-        $cherryCoke = $coke->createVariant($name, $description);
+        $cherryCoke = $coke->createVariant($sku, $name, $description);
 
         $this->assertTrue($cherryCoke->isVariant());
         $this->assertEquals($coke->id, $cherryCoke->parent_id);
+        $this->assertEquals($cherryCoke->sku, $sku);
         $this->assertEquals($name, $cherryCoke->name);
         $this->assertEquals($description, $cherryCoke->description);
         $this->assertEquals($category->id, $cherryCoke->category_id);
@@ -82,6 +91,7 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Pop',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
@@ -89,6 +99,7 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $cherryCoke = Inventory::create([
             'name' => 'Cherry Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Cherry Coke',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
@@ -113,12 +124,15 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Pop',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
@@ -143,12 +157,15 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Pop',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
@@ -172,6 +189,7 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Pop',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
@@ -179,6 +197,7 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $cherryCoke = Inventory::create([
             'name' => 'Cherry Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Cherry Coke',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
@@ -206,16 +225,21 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Pop',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku1 = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku1, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
-        $vanillaCherryCoke = $coke->createVariant('Vanilla Cherry Coke');
+        $sku2 = $this->generateSku().'VANILLA-CHERRY-COKE';
+
+        $vanillaCherryCoke = $coke->createVariant($sku2, 'Vanilla Cherry Coke');
 
         $vanillaCherryCoke->makeVariantOf($coke);
 
@@ -242,18 +266,23 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Pop',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku1 = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku1, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
         $this->expectException('Stevebauman\Inventory\Exceptions\InvalidVariantException');
 
-        $vanillaCherryCoke = $cherryCoke->createVariant('Vanilla Cherry Coke');
+        $sku2 = $this->generateSku().'VANILLA-CHERRY-COKE';
+
+        $vanillaCherryCoke = $cherryCoke->createVariant($sku2, 'Vanilla Cherry Coke');
 
         $vanillaCherryCoke->makeVariantOf($cherryCoke);
     }
@@ -275,12 +304,15 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Delicious Pop',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
@@ -306,12 +338,15 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Actually coke is kinda gross',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
@@ -339,12 +374,15 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Actually coke is kinda gross',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
@@ -368,12 +406,15 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'No really, I\'m getting sick of it',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
@@ -399,12 +440,15 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'No really, I\'m getting sick of it',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
@@ -429,12 +473,15 @@ class InventoryVariantTest extends FunctionalTestCase
 
         $coke = Inventory::create([
             'name' => 'Coke',
+            'sku' => $this->generateSku(),
             'description' => 'Honestly why drink brown fizzy garbage water',
             'metric_id' => $metric->id,
             'category_id' => $category->id,
         ]);
 
-        $cherryCoke = $coke->createVariant('Cherry Coke');
+        $sku = $this->generateSku().'CHERRY-COKE';
+
+        $cherryCoke = $coke->createVariant($sku, 'Cherry Coke');
 
         $cherryCoke->makeVariantOf($coke);
 
