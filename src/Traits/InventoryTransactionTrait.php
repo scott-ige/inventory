@@ -267,11 +267,11 @@ trait InventoryTransactionTrait
          * Only allow a transaction that has a previous state of null, opened and reserved
          * to use the checkout function
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_COMMERCE_CHECKOUT, [
             null,
             $this::STATE_OPENED,
             $this::STATE_COMMERCE_RESERVED,
-        ], $this::STATE_COMMERCE_CHECKOUT);
+        ]);
 
         if ($this->isReservation()) {
             return $this->checkoutFromReserved();
@@ -317,14 +317,14 @@ trait InventoryTransactionTrait
          * Make sure the previous state of the transaction was
          * checked out, opened, reserved, returned/partially returned or back ordered
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_COMMERCE_SOLD, [
             $this::STATE_OPENED,
             $this::STATE_COMMERCE_CHECKOUT,
             $this::STATE_COMMERCE_RESERVED,
             $this::STATE_COMMERCE_BACK_ORDERED,
             $this::STATE_COMMERCE_RETURNED,
             $this::STATE_COMMERCE_RETURNED_PARTIAL,
-        ], $this::STATE_COMMERCE_SOLD);
+        ]);
 
         /*
          * Mark the current state sold
@@ -351,10 +351,10 @@ trait InventoryTransactionTrait
         /*
          * Only allow a previous state of null or opened
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_COMMERCE_SOLD, [
             null,
             $this::STATE_OPENED,
-        ], $this::STATE_COMMERCE_SOLD);
+        ]);
 
         /*
          * Mark the current state sold
@@ -431,12 +431,12 @@ trait InventoryTransactionTrait
          * Only allow partial returns when the transaction state is
          * sold, reserved, checkout, or returned partial
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_COMMERCE_RETURNED_PARTIAL, [
             $this::STATE_COMMERCE_SOLD,
             $this::STATE_COMMERCE_RESERVED,
             $this::STATE_COMMERCE_CHECKOUT,
             $this::STATE_COMMERCE_RETURNED_PARTIAL,
-        ], $this::STATE_COMMERCE_RETURNED_PARTIAL);
+        ]);
 
         /*
          * Retrieve the previous state for returning the transaction
@@ -483,12 +483,12 @@ trait InventoryTransactionTrait
          * Only allow returns when the transaction state is
          * sold, reserved, checkout, or returned partial
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_COMMERCE_RETURNED, [
             $this::STATE_COMMERCE_SOLD,
             $this::STATE_COMMERCE_RESERVED,
             $this::STATE_COMMERCE_CHECKOUT,
             $this::STATE_COMMERCE_RETURNED_PARTIAL,
-        ], $this::STATE_COMMERCE_RETURNED);
+        ]);
 
         /*
          * Set the state to returned
@@ -532,12 +532,12 @@ trait InventoryTransactionTrait
         /*
          * Only allow a previous state of null, opened, back ordered, and checkout
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_COMMERCE_RESERVED, [
             null,
             $this::STATE_OPENED,
             $this::STATE_COMMERCE_BACK_ORDERED,
             $this::STATE_COMMERCE_CHECKOUT,
-        ], $this::STATE_COMMERCE_RESERVED);
+        ]);
 
         if ($this->isCheckout()) {
             return $this->reservedFromCheckout();
@@ -581,10 +581,10 @@ trait InventoryTransactionTrait
      */
     public function backOrder($quantity)
     {
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_COMMERCE_BACK_ORDERED, [
             null,
             $this::STATE_OPENED,
-        ], $this::STATE_COMMERCE_BACK_ORDERED);
+        ]);
 
         $this->state = $this::STATE_COMMERCE_BACK_ORDERED;
 
@@ -611,9 +611,9 @@ trait InventoryTransactionTrait
         /*
          * Only allow a previous state of back-ordered
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_COMMERCE_BACK_ORDER_FILLED, [
             $this::STATE_COMMERCE_BACK_ORDERED,
-        ], $this::STATE_COMMERCE_BACK_ORDER_FILLED);
+        ]);
 
         $this->state = $this::STATE_COMMERCE_BACK_ORDER_FILLED;
 
@@ -645,11 +645,11 @@ trait InventoryTransactionTrait
         /*
          * Only allow previous states of null, opened, and partially received order
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_ORDERED_PENDING, [
             null,
             $this::STATE_OPENED,
             $this::STATE_ORDERED_RECEIVED_PARTIAL,
-        ], $this::STATE_ORDERED_PENDING);
+        ]);
 
         $this->quantity = $quantity;
 
@@ -696,9 +696,9 @@ trait InventoryTransactionTrait
         /*
          * Only allow the previous state of ordered
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_ORDERED_RECEIVED, [
             $this::STATE_ORDERED_PENDING,
-        ], $this::STATE_ORDERED_RECEIVED);
+        ]);
 
         $received = $this->quantity;
 
@@ -741,9 +741,9 @@ trait InventoryTransactionTrait
         /*
          * Only allow the previous state of ordered
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_ORDERED_RECEIVED_PARTIAL, [
             $this::STATE_ORDERED_PENDING,
-        ], $this::STATE_ORDERED_RECEIVED_PARTIAL);
+        ]);
 
         /*
          * Get the left over amount of quantity still to
@@ -783,10 +783,10 @@ trait InventoryTransactionTrait
      */
     public function hold($quantity, $reason = '', $cost = 0)
     {
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_INVENTORY_ON_HOLD, [
             null,
             $this::STATE_OPENED,
-        ], $this::STATE_INVENTORY_ON_HOLD);
+        ]);
 
         $this->quantity = $quantity;
 
@@ -839,9 +839,9 @@ trait InventoryTransactionTrait
         /*
          * Only allow the previous state of on-hold
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_INVENTORY_RELEASED, [
             $this::STATE_INVENTORY_ON_HOLD,
-        ], $this::STATE_INVENTORY_RELEASED);
+        ]);
 
         $released = $this->quantity;
 
@@ -876,9 +876,9 @@ trait InventoryTransactionTrait
             return $this->releaseAll($reason, $cost);
         }
 
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_INVENTORY_RELEASED, [
             $this::STATE_INVENTORY_ON_HOLD,
-        ], $this::STATE_INVENTORY_RELEASED);
+        ]);
 
         $this->quantity = $this->quantity - $quantity;
 
@@ -939,9 +939,9 @@ trait InventoryTransactionTrait
         /*
          * Only allow the previous state of on hold
          */
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_INVENTORY_REMOVED, [
             $this::STATE_INVENTORY_ON_HOLD,
-        ], $this::STATE_INVENTORY_REMOVED);
+        ]);
 
         $this->state = $this::STATE_INVENTORY_REMOVED;
 
@@ -979,9 +979,9 @@ trait InventoryTransactionTrait
                 return $this->removeAll();
             }
 
-            $this->validatePreviousState([
+            $this->validatePreviousState($this::STATE_INVENTORY_REMOVED_PARTIAL, [
                 $this::STATE_INVENTORY_ON_HOLD,
-            ], $this::STATE_INVENTORY_REMOVED_PARTIAL);
+            ]);
 
             $this->quantity = $this->quantity - $quantity;
 
@@ -997,10 +997,10 @@ trait InventoryTransactionTrait
              * We must be processing a pure removal transaction, make sure
              * previous state was null or opened
              */
-            $this->validatePreviousState([
+            $this->validatePreviousState($this::STATE_INVENTORY_REMOVED, [
                 null,
                 $this::STATE_OPENED,
-            ], $this::STATE_INVENTORY_REMOVED);
+            ]);
 
             $this->state = $this::STATE_INVENTORY_REMOVED;
 
@@ -1034,7 +1034,7 @@ trait InventoryTransactionTrait
      */
     public function cancel($reason = '', $cost = 0)
     {
-        $this->validatePreviousState([
+        $this->validatePreviousState($this::STATE_CANCELLED, [
             null,
             $this::STATE_OPENED,
             $this::STATE_COMMERCE_CHECKOUT,
@@ -1042,7 +1042,7 @@ trait InventoryTransactionTrait
             $this::STATE_COMMERCE_BACK_ORDERED,
             $this::STATE_ORDERED_PENDING,
             $this::STATE_INVENTORY_ON_HOLD,
-        ], $this::STATE_CANCELLED);
+        ]);
 
         $beforeQuantity = $this->quantity;
         $beforeState = $this->state;
@@ -1208,14 +1208,14 @@ trait InventoryTransactionTrait
      * Returns true if the current state equals at least one
      * of the allowed states in the array. Throws an exception otherwise.
      *
-     * @param array  $allowedStates
      * @param string $toState
+     * @param array  $allowedStates
      *
      * @throws InvalidTransactionStateException
      *
      * @return bool
      */
-    private function validatePreviousState($allowedStates = [], $toState)
+    private function validatePreviousState($toState, $allowedStates = [])
     {
         if (!in_array($this->state, $allowedStates)) {
             $fromState = (!$this->state ? 'NULL' : $this->state);
