@@ -44,15 +44,16 @@ trait CustomAttributeTrait
      */
     public function getCustomAttribute($attr) 
     {
-        $res = false;
-
         if ($attr instanceof Model) {
             return $attr;
-        } else {
-            $res = $this->customAttributes()->where('custom_attributes.name', $attr)->orWhere('custom_attributes.id', $attr)->get()->first();
         }
-
-        return $res ? $res : false;
+        
+        $res = $this->customAttributes()
+            ->where('custom_attributes.name', $attr)
+            ->orWhere('custom_attributes.id', $attr)
+            ->first();
+        
+        return $res ?? false;
     }
 
     /**
@@ -68,14 +69,20 @@ trait CustomAttributeTrait
      */
     public function resolveCustomAttributeObject($attr) 
     {
-        if ($attr instanceof Model) return $attr;
-
-        $attrObj = $this->hasCustomAttribute($attr) ? 
-            $this->getCustomAttribute($attr) :
-            CustomAttribute::where('id', $attr)->orWhere('name', $attr)->first();
-
-        if (!$attrObj) throw new InvalidCustomAttributeException('Could not find custom attribute with key "'.$attr.'"');
-
+        if ($attr instanceof Model) {
+            return $attr;
+        }
+        
+        $attrObj = $this->getCustomAttribute($attr);
+        
+        if ($attrObj === false) {
+            $attrObj = CustomAttribute::where('id', $attr)->orWhere('name', $attr)->first();
+        }
+        
+        if (is_null($attrObj)) {
+            throw new InvalidCustomAttributeException("Could not find custom attribute with key \"$attr\"");
+        }
+        
         return $attrObj;
     }
 
@@ -311,22 +318,16 @@ trait CustomAttributeTrait
      * Sets an customAttributeValue with the given customAttribute name
      * and value
      * 
-     * @param int|string|Model $id
+     * @param int|string|Model $identifier
      * @param mixed $value
      * @param string $type default = null
      * 
      * @return mixed
      */
-    public function setCustomAttribute($attr, $value, $type = null) 
+    public function setCustomAttribute($identifier, $value, $type = null) 
     {
         try {
-            if ($attr instanceof Model) {
-                // do nothing
-            } else if ($this->hasCustomAttribute($attr)) {
-                $attr = $this->getCustomAttribute($attr);
-            } else {
-                $attr = $this->resolveCustomAttributeObject($attr);
-            }
+            $attr = $this->resolveCustomAttributeObject($identifier);
 
             if (is_null($value) && $attr->required) {
                 throw new RequiredCustomAttributeException('Cannot set required attribute to null');
