@@ -311,21 +311,19 @@ trait CustomAttributeTrait
      * Sets an customAttributeValue with the given customAttribute name
      * and value
      * 
-     * @param int|string|Model $id
+     * @param int|string|Model $identifier
      * @param mixed $value
      * @param string $type default = null
      * 
      * @return mixed
      */
-    public function setCustomAttribute($attr, $value, $type = null) 
+    public function setCustomAttribute($identifier, $value, $type = null) 
     {
         try {
-            if ($attr instanceof Model) {
-                // do nothing
-            } else if ($this->hasCustomAttribute($attr)) {
-                $attr = $this->getCustomAttribute($attr);
-            } else {
-                $attr = $this->resolveCustomAttributeObject($attr);
+            $attr = $this->getCustomAttribute($identifier);
+
+            if ($attr === false) {
+                $this->resolveCustomAttributeObject($identifier);
             }
 
             if (is_null($value) && $attr->required) {
