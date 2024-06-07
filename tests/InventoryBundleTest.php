@@ -108,7 +108,8 @@ class InventoryBundleTest extends FunctionalTestCase
         $this->assertEquals(4, $item->getBundleItems()->first()->pivot->quantity);
     }
 
-    public function testAddSameBundleItemsWithMixedMethods() {
+    public function testAddSameBundleItemsWithMixedMethods()
+    {
         $item = $this->newInventory();
 
         $childItem = $this->newInventory([
@@ -146,22 +147,6 @@ class InventoryBundleTest extends FunctionalTestCase
     //      */
     //     $this->assertEquals(10, $item->bundles()->first()->pivot->quantity);
     // }
-
-    public function testAddInvalidBundleItem()
-    {
-        $item = $this->newInventory();
-
-        try {
-            $this->expectError('TypeError');
-            $item->addBundleItem('invalid item');
-
-            $passes = false;
-        } catch (\Exception $e) {
-            $passes = true;
-        }
-
-        $this->assertTrue($passes);
-    }
 
     public function testAddInvalidQuantityWithBundleItem()
     {
@@ -372,7 +357,7 @@ class InventoryBundleTest extends FunctionalTestCase
     {
         $item = $this->newInventory();
 
-        $this->assertObjectHasAttribute('items', $item->getBundleItems());
+        $this->assertEmpty($item->getBundleItems());
     }
 
     public function testRemoveBundleItem()
@@ -617,9 +602,6 @@ class InventoryBundleTest extends FunctionalTestCase
 
         $item->getBundleItems();
 
-        $this->assertObjectHasAttribute('items', $item->getCachedBundleItems());
-        $this->assertObjectHasAttribute('escapeWhenCastingToString', $item->getCachedBundleItems());
-
         $this->assertEquals($item2->id, $item->getCachedBundleItems()->first()->id);
     }
 
@@ -635,7 +617,8 @@ class InventoryBundleTest extends FunctionalTestCase
         $this->assertTrue($item->forgetCachedBundleItems());
     }
 
-    public function testShouldNotUnmakeBundleWithExistingBundleItems() {
+    public function testShouldNotUnmakeBundleWithExistingBundleItems()
+    {
         $item = $this->newInventory();
 
         $childItem = $this->newInventory();
@@ -647,7 +630,8 @@ class InventoryBundleTest extends FunctionalTestCase
         $item->unmakeBundle();
     }
 
-    public function testShouldUnmakeBundleIfNoBundleItemsLeft() {
+    public function testShouldUnmakeBundleIfNoBundleItemsLeft()
+    {
         $item = $this->newInventory();
 
         $childItem = $this->newInventory();

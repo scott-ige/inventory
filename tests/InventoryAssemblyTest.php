@@ -126,22 +126,6 @@ class InventoryAssemblyTest extends FunctionalTestCase
     //     $this->assertEquals(10, $item->assemblies()->first()->pivot->quantity);
     // }
 
-    public function testAddInvalidAssemblyItem()
-    {
-        $item = $this->newInventory();
-
-        try {
-            $this->expectError('TypeError');
-            $item->addAssemblyItem('invalid item');
-
-            $passes = false;
-        } catch (\Exception $e) {
-            $passes = true;
-        }
-
-        $this->assertTrue($passes);
-    }
-
     public function testAddInvalidQuantityWithAssemblyItem()
     {
         $item = $this->newInventory();

@@ -91,7 +91,12 @@ class InventoryStockTest extends FunctionalTestCase
     {
         $stock = $this->newInventoryStock();
 
-        Lang::shouldReceive('get')->once();
+        Lang::shouldReceive('get')
+            ->once()
+            ->with('inventory::exceptions.InvalidMovementException', [
+                'movement' => 'testing'
+            ])
+            ->andReturn('Movement testing is invalid');
 
         $this->expectException('Stevebauman\Inventory\Exceptions\InvalidMovementException');
 
@@ -120,7 +125,13 @@ class InventoryStockTest extends FunctionalTestCase
     {
         $stock = $this->newInventoryStock();
 
-        Lang::shouldReceive('get')->once();
+        Lang::shouldReceive('get')
+            ->once()
+            ->with('inventory::exceptions.NotEnoughStockException', [
+                'quantity' => 1000,
+                'available' => $stock->quantity,
+            ])
+            ->andReturn('Movement testing is invalid');;
 
         $this->expectException('Stevebauman\Inventory\Exceptions\NotEnoughStockException');
 
@@ -135,7 +146,12 @@ class InventoryStockTest extends FunctionalTestCase
 
         $item = Inventory::find($stock->inventory_id);
 
-        Lang::shouldReceive('get')->once();
+        Lang::shouldReceive('get')
+            ->once()
+            ->with('inventory::exceptions.StockAlreadyExistsException', [
+                'location' => $location->name
+            ])
+            ->andReturn("Stock already exists on location $location->name");
 
         $this->expectException('Stevebauman\Inventory\Exceptions\StockAlreadyExistsException');
 
@@ -148,7 +164,12 @@ class InventoryStockTest extends FunctionalTestCase
 
         $location = $this->newLocation();
 
-        Lang::shouldReceive('get')->once();
+        Lang::shouldReceive('get')
+            ->once()
+            ->with('inventory::exceptions.StockNotFoundException', [
+                'location' => $location->name
+            ])
+            ->andReturn("No stock was found from location $location->name");
 
         $this->expectException('Stevebauman\Inventory\Exceptions\StockNotFoundException');
 
@@ -217,7 +238,11 @@ class InventoryStockTest extends FunctionalTestCase
 
         $item = Inventory::find($stock->inventory_id);
 
-        Lang::shouldReceive('get')->once();
+        Lang::shouldReceive('get')->once()
+            ->with('inventory::exceptions.InvalidLocationException', [
+                'location' => 'testing',
+            ])
+            ->andReturn('Location testing is invalid');
 
         $this->expectException('Stevebauman\Inventory\Exceptions\InvalidLocationException');
 
@@ -233,7 +258,8 @@ class InventoryStockTest extends FunctionalTestCase
         $this->assertInstanceOf('Stevebauman\Inventory\Interfaces\StateableInterface', $transaction);
     }
 
-    public function testRollbackStockMovement() {
+    public function testRollbackStockMovement()
+    {
         $stock = $this->newInventoryStock();
         $initialQuantity = $stock->quantity;
 
@@ -286,7 +312,8 @@ class InventoryStockTest extends FunctionalTestCase
         $this->assertEquals($initialQuantity, $stock->quantity);
     }
 
-    public function testNumericLocation() {
+    public function testNumericLocation()
+    {
         $location = $this->newLocation();
 
         $item = $this->newInventory();

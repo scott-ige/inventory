@@ -29,9 +29,9 @@ trait CustomAttributeTrait
      * 
      * @return boolean
      */
-    public function hasCustomAttribute($attr) 
+    public function hasCustomAttribute($attr)
     {
-        return (boolean) $this->getCustomAttribute($attr);
+        return (bool) $this->getCustomAttribute($attr);
     }
 
     /**
@@ -42,17 +42,17 @@ trait CustomAttributeTrait
      * 
      * @return Model|boolean
      */
-    public function getCustomAttribute($attr) 
+    public function getCustomAttribute($attr)
     {
         if ($attr instanceof Model) {
             return $attr;
         }
-        
+
         $res = $this->customAttributes()
             ->where('custom_attributes.name', $attr)
             ->orWhere('custom_attributes.id', $attr)
             ->first();
-        
+
         return $res ?? false;
     }
 
@@ -67,22 +67,22 @@ trait CustomAttributeTrait
      * 
      * @throws InvalidCustomAttributeException
      */
-    public function resolveCustomAttributeObject($attr) 
+    public function resolveCustomAttributeObject($attr)
     {
         if ($attr instanceof Model) {
             return $attr;
         }
-        
+
         $attrObj = $this->getCustomAttribute($attr);
-        
+
         if ($attrObj === false) {
             $attrObj = CustomAttribute::where('id', $attr)->orWhere('name', $attr)->first();
         }
-        
+
         if (is_null($attrObj)) {
             throw new InvalidCustomAttributeException("Could not find custom attribute with key \"$attr\"");
         }
-        
+
         return $attrObj;
     }
 
@@ -92,7 +92,7 @@ trait CustomAttributeTrait
      * 
      * @return Collection
      */
-    public function getCustomAttributes() 
+    public function getCustomAttributes()
     {
         return $this->customAttributes()->get();
     }
@@ -108,11 +108,11 @@ trait CustomAttributeTrait
      * 
      * @return Collection
      */
-    public function getCustomAttributeValues() 
+    public function getCustomAttributeValues()
     {
-        $attrVals = $this->customAttributes()->get()->reduce(function($carry, $item) {
-            if (!$carry) return [$item->name => $item->values[$item->value_type.'_val']];
-            else $carry[$item->name] = $item->values[$item->value_type.'_val'];
+        $attrVals = $this->customAttributes()->get()->reduce(function ($carry, $item) {
+            if (!$carry) return [$item->name => $item->values[$item->value_type . '_val']];
+            else $carry[$item->name] = $item->values[$item->value_type . '_val'];
             return $carry;
         });
 
@@ -141,15 +141,13 @@ trait CustomAttributeTrait
             $testString = '1234567890abcdefghijklmnopqrstuvwxyz';
             if ($type == 'longText') {
                 throw new InvalidCustomAttributeException('Cannot create longText attribute with regular expression rule');
-            }
-            else if (@preg_match($rule, $testString) === false) {
+            } else if (@preg_match($rule, $testString) === false) {
                 throw new InvalidCustomAttributeException('Cannot create custom attribute - invalid regular expression provided');
-            } 
-            else if (is_null($ruleDesc)) {
+            } else if (is_null($ruleDesc)) {
                 throw new InvalidCustomAttributeException('Cannot create custom attribute with regex rule but no description');
             }
         }
-        
+
         /* 
          * Infer raw type from the $type parameter.  We will
          * use this information to decide which column to store
@@ -162,11 +160,11 @@ trait CustomAttributeTrait
             case 'string':
                 $rawType = 'string';
                 break;
-            
+
             case 'integer':
                 $rawType = 'num';
                 break;
-            
+
             case 'decimal':
                 $rawType = 'num';
                 break;
@@ -200,25 +198,25 @@ trait CustomAttributeTrait
         // Format snake-case "name" attribute from display name
         $name = strtolower($displayName);
         $name = preg_replace('/\s+/', '_', $name);
-        
+
         // TODO: deal with all this default logic:
         $defaultIsNull = is_null($defaultValue);
-        
+
         $hasDefault = $defaultIsNull ? false : true;
-        
+
         // Validate default value matches type
         if ($hasDefault) {
             $this->validateAttribute($defaultValue, $rawType);
         }
-        
+
         $defaultValue = $defaultIsNull ? null : $defaultValue;
 
         // Check if existing attribute of that name
         $existingAttr = $this->getCustomAttribute($name);
-        
+
         // If the customAttribute exists on this item, check if it's of the correct type
         if ($existingAttr) {
-            throw new InvalidCustomAttributeException('Cannot add same attribute "'.$displayName.'" twice');
+            throw new InvalidCustomAttributeException('Cannot add same attribute "' . $displayName . '" twice');
         } else {
             // Check that the attribute exists at all - not just on this item.
             $anyExistingAttr = CustomAttribute::where('name', $name)->where('value_type', $rawType)->first();
@@ -236,7 +234,7 @@ trait CustomAttributeTrait
             } else {
                 // If no existing customAttribute found, create a new customAttribute
                 $createdCustomAttribute = $this->createCustomAttribute($name, $displayName, $rawType, $type, $hasDefault, $defaultValue, $required, $rule, $ruleDesc);
-                
+
                 if ($hasDefault) {
                     $this->setCustomAttributeDefault($createdCustomAttribute, $defaultValue);
                 }
@@ -259,14 +257,15 @@ trait CustomAttributeTrait
      * 
      * @throws InvalidCustomAttributeException
      */
-    private function validateAttribute($value, $type) {
+    private function validateAttribute($value, $type)
+    {
         // We allow null values
-        if(!is_null($value)) {
+        if (!is_null($value)) {
             if ($type == 'num' && !is_numeric($value)) {
-                $message = '"'.$value.'" is an invalid number value';
+                $message = '"' . $value . '" is an invalid number value';
                 throw new InvalidCustomAttributeException($message);
             } else if ($type == 'date' && (!strtotime($value) && !is_numeric($value))) {
-                $message = '"'.$value.'" is an invalid date value';
+                $message = '"' . $value . '" is an invalid date value';
                 throw new InvalidCustomAttributeException($message);
             }
         }
@@ -324,7 +323,7 @@ trait CustomAttributeTrait
      * 
      * @return mixed
      */
-    public function setCustomAttribute($identifier, $value, $type = null) 
+    public function setCustomAttribute($identifier, $value, $type = null)
     {
         try {
             $attr = $this->resolveCustomAttributeObject($identifier);
@@ -338,31 +337,31 @@ trait CustomAttributeTrait
             if (!$type) {
                 $type = $attr->value_type;
             }
-            
+
             if (!$attr || !$existingAttrValObj) {
                 throw new \Exception();
             }
 
             $this->validateAttribute($value, $type);
 
-            if ($type == 'date') {
+            if ($type == 'date' && !is_null($value)) {
                 $value = $this->formatDateValue($value);
             }
 
             $valKey = $type . '_val';
-    
+
             $existingAttrValObj->$valKey = $value;
-    
+
             return $existingAttrValObj->save();
         } catch (RequiredCustomAttributeException $e) {
             throw $e;
         } catch (\Exception $e) {
-            if (!$type) throw new InvalidCustomAttributeException('Could not find attribute "'.$attr.'", and can not create without a type');
+            if (!$type) throw new InvalidCustomAttributeException('Could not find attribute "' . $attr . '", and can not create without a type');
 
             $this->validateAttribute($value, $type);
 
             $itemKey = $this->getKey();
-            
+
             $attrVal = [
                 'custom_attribute_id' => $attr->id,
                 'inventory_id' => $itemKey,
@@ -370,7 +369,7 @@ trait CustomAttributeTrait
                 'num_val' => $type == 'num' ? $value : null,
                 'date_val' => $type == 'date' ? $this->formatDateValue($value) : null,
             ];
-    
+
             return $this->customAttributeValues()->create($attrVal);
         }
     }
@@ -382,7 +381,8 @@ trait CustomAttributeTrait
      * 
      * @return string
      */
-    private function formatDateValue($value) {
+    private function formatDateValue($value)
+    {
         if (is_numeric($value)) {
             return date('Y-m-d H:i:s', $value);
         } else {
@@ -400,7 +400,7 @@ trait CustomAttributeTrait
      * 
      * @throws InvalidCustomAttributeException
      */
-    public function getCustomAttributeValue($attr) 
+    public function getCustomAttributeValue($attr)
     {
         try {
             $attrObj = $this->getCustomAttribute($attr);
@@ -411,9 +411,9 @@ trait CustomAttributeTrait
 
             $key = $type . '_val';
 
-            return $attrValObj->$key; 
+            return $attrValObj->$key;
         } catch (\Exception $e) {
-            throw new InvalidCustomAttributeException('Could not get custom attribute value with key "'.$attr.'"');
+            throw new InvalidCustomAttributeException('Could not get custom attribute value with key "' . $attr . '"');
         }
 
         return false;
@@ -428,7 +428,7 @@ trait CustomAttributeTrait
      * 
      * @throws InvalidCustomAttributeException
      */
-    public function getCustomAttributeDefault($attr) 
+    public function getCustomAttributeDefault($attr)
     {
         try {
             $attrObj = $this->getCustomAttribute($attr);
@@ -436,7 +436,7 @@ trait CustomAttributeTrait
             if (is_numeric($attrObj->default_value)) return filter_var($attrObj->default_value, FILTER_SANITIZE_NUMBER_FLOAT);
             else return $attrObj->default_value;
         } catch (\Exception $e) {
-            throw new InvalidCustomAttributeException('Could not get custom attribute with key "'.$attr.'"');
+            throw new InvalidCustomAttributeException('Could not get custom attribute with key "' . $attr . '"');
         }
 
         return false;
@@ -452,7 +452,7 @@ trait CustomAttributeTrait
      * 
      * @throws InvalidCustomAttributeException
      */
-    public function getCustomAttributeValueObj($attr) 
+    public function getCustomAttributeValueObj($attr)
     {
         // If called with no attribute to find, don't bother looking
         // if (!$attr) return false;
@@ -464,9 +464,9 @@ trait CustomAttributeTrait
                 ->where('custom_attribute_id', $attrObj->getKey())
                 ->get()->first();
 
-            return $attrValObj; 
+            return $attrValObj;
         } catch (\Exception $e) {
-            throw new InvalidCustomAttributeException('Could not get custom attribute value object with key "'.$attr.'"');
+            throw new InvalidCustomAttributeException('Could not get custom attribute value object with key "' . $attr . '"');
         }
     }
 
@@ -480,7 +480,7 @@ trait CustomAttributeTrait
      * 
      * @throws InvalidCustomAttributeException
      */
-    public function removeCustomAttribute($attr) 
+    public function removeCustomAttribute($attr)
     {
         try {
             $attrObj = $this->resolveCustomAttributeObject($attr);
@@ -492,7 +492,7 @@ trait CustomAttributeTrait
 
             return true;
         } catch (\Exception $e) {
-            throw new InvalidCustomAttributeException('Could not remove custom attribute value object with key "'.$attr.'"');
+            throw new InvalidCustomAttributeException('Could not remove custom attribute value object with key "' . $attr . '"');
         }
     }
 
@@ -504,7 +504,8 @@ trait CustomAttributeTrait
      * 
      * @return Model
      */
-    public function setCustomAttributeDefault($attr, $value) {
+    public function setCustomAttributeDefault($attr, $value)
+    {
         $attrObj = $this->getCustomAttribute($attr);
 
         $attrObj->default_value = $value;
@@ -523,7 +524,8 @@ trait CustomAttributeTrait
      * 
      * @return Model
      */
-    public function removeCustomAttributeDefault($attr) {
+    public function removeCustomAttributeDefault($attr)
+    {
         $attrObj = $this->getCustomAttribute($attr);
 
         $attrObj->default_value = null;

@@ -445,7 +445,7 @@ trait InventoryStockTrait
         /**
          * TODO: This mofo set the reason on an InventoryStock where
          * it has no business being.
-         */ 
+         */
         $this->setReason($reason);
 
         $this->setCost($cost);
@@ -690,7 +690,7 @@ trait InventoryStockTrait
      */
     private function allowDuplicateMovementsEnabled()
     {
-        return Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'allow_duplicate_movements');
+        return Config::get('inventory' . InventoryServiceProvider::$packageConfigSeparator . 'allow_duplicate_movements');
     }
 
     /**
@@ -702,6 +702,6 @@ trait InventoryStockTrait
      */
     private function rollbackCostEnabled()
     {
-        return Config::get('inventory'.InventoryServiceProvider::$packageConfigSeparator.'rollback_cost');
+        return Config::get('inventory' . InventoryServiceProvider::$packageConfigSeparator . 'rollback_cost');
     }
 }
