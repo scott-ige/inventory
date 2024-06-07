@@ -1,6 +1,6 @@
 {
     "name": "dvicklund/inventory",
-    "description": "Inventory management using Laravel 8",
+    "description": "Inventory management using Laravel 9",
     "keywords": ["laravel", "inventory", "inventory-management"],
     "authors": [
         {
@@ -14,7 +14,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=7.3.0",
+        "php": "^8.0.2",
         "laravel/framework": "^9.6",
         "gazsp/baum": "^2.0"
     },
@@ -27,15 +27,14 @@
         "nunomaduro/collision": "^6.1"
     },
     "archive": {
-      "exclude": ["/tests"]
+        "exclude": ["/tests"]
     },
     "autoload": {
         "psr-4": {
             "Stevebauman\\Inventory\\": "src/"
         }
     },
-    "autoload-dev":
-    {
+    "autoload-dev": {
         "psr-4": {
             "Stevebauman\\Inventory\\Tests\\": "tests/"
         }
