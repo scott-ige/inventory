@@ -2,10 +2,10 @@ name: CI
 on:
   pull_request:
     branches:
-      - master
+      - add-workflows
   push:
     branches:
-      - master
+      - add-workflows
 
 jobs:
   tests:
