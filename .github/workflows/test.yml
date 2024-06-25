@@ -2,19 +2,24 @@ name: CI
 on:
   pull_request:
     branches:
-      - add-workflows
+      - laravel-10-with-workflows
   push:
     branches:
-      - add-workflows
+      - laravel-10-with-workflows
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        operating-system: [ubuntu-latest, windows-latest, macOS-latest]
-        php-versions: ["8.0", "8.1", "8.2", "8.2", "8.3"]
-    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+        os: [ubuntu-latest]
+        php: ["8.0", "8.1", "8.2", "8.2", "8.3"]
+        laravel: ["9.*", "10.*"]
+        stability: [prefer-lowest, prefer-stable]
+        exclude:
+          - php: "8.0"
+            laravel: "10.*"
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - Stability ${{ matrix.stability }} - Test on ${{ matrix.os }}
 
     services:
       mysql:
@@ -27,27 +32,33 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout source code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
         with:
-          path: vendor
-          key: composer-${{ hashFiles('**/composer.lock') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            composer-
+            ${{ runner.os }}-composer-
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php }}
 
-      - name: Install composer dependencies
+      - name: Install Composer dependencies
         run: |
-          composer install --no-scripts
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-scripts
 
-      - name: Run Test suite
+      - name: Run test suite
         run: vendor/bin/phpunit

@@ -26,6 +26,8 @@ This package has been taken over by @dvicklund.
         <ul>
             <li><a href="docs/INSTALLATION.md#installation-laravel-4">Laravel 4</a></li>
             <li><a href="docs/INSTALLATION.md#installation-laravel-5">Laravel 5</a></li>
+            <li><a href="docs/INSTALLATION.md#installation-laravel-9">Laravel 9</a></li>
+            <li><a href="docs/INSTALLATION.md#installation-laravel-10">Laravel 10</a></li>
             <li>
                 <a href="docs/INSTALLATION.md#customize-installation">Customize Installation</a>
                 <ul>
@@ -91,7 +93,8 @@ you can simply use the built in models.
 
 ### Requirements
 
-- Laravel 8.*
+- PHP 8.\*
+- Laravel 9.\* or Laravel 10.\* (minimum version of PHP for Laravel 10 is ^8.1)
 - Laravel's Auth, Sentry or Sentinel if you need automatic accountability
 - A `users` database table
 
